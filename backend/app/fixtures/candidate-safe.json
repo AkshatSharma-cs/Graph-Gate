@@ -1,0 +1,116 @@
+{
+  "agents": [
+    {
+      "id": "reporting-agent",
+      "name": "Executive Reporting Agent",
+      "framework": "langchain",
+      "tools": ["drive-reader", "slack-sender", "feedback-reader"],
+      "context_id": "ctx-reporting-agent"
+    }
+  ],
+  "tools": [
+    {
+      "id": "drive-reader",
+      "name": "Google Drive Reader",
+      "kind": "read",
+      "identity_id": "drive-read-id",
+      "context_id": "ctx-reporting-agent"
+    },
+    {
+      "id": "slack-sender",
+      "name": "Slack Channel Dispatcher",
+      "kind": "send",
+      "identity_id": "slack-send-id",
+      "context_id": "ctx-reporting-agent"
+    },
+    {
+      "id": "feedback-reader",
+      "name": "Customer Feedback Reader",
+      "kind": "read",
+      "identity_id": "feedback-read-id",
+      "context_id": "ctx-reporting-agent"
+    }
+  ],
+  "identities": [
+    {
+      "id": "drive-read-id",
+      "name": "Drive Read Service Account",
+      "principal_type": "service_account",
+      "can_read": ["project-update.md"],
+      "can_send_to": []
+    },
+    {
+      "id": "feedback-read-id",
+      "name": "Zendesk Feedback Read Account",
+      "principal_type": "api_key",
+      "can_read": ["customer-feedback.md"],
+      "can_send_to": []
+    },
+    {
+      "id": "slack-send-id",
+      "name": "Slack Bot App Identity",
+      "principal_type": "oauth_token",
+      "can_read": [],
+      "can_send_to": ["internal-slack"]
+    }
+  ],
+  "resources": [
+    {
+      "id": "payroll.csv",
+      "name": "Global Payroll & Compensation FY26",
+      "resource_type": "dataset",
+      "classification": "restricted"
+    },
+    {
+      "id": "project-update.md",
+      "name": "Quarterly Project Status Update",
+      "resource_type": "document",
+      "classification": "internal"
+    },
+    {
+      "id": "customer-feedback.md",
+      "name": "Weekly Customer Sentiment Log",
+      "resource_type": "document",
+      "classification": "internal"
+    }
+  ],
+  "destinations": [
+    {
+      "id": "internal-slack",
+      "name": "#eng-announcements (Slack)",
+      "trust": "internal"
+    },
+    {
+      "id": "external-webhook",
+      "name": "Partner Webhook Endpoint",
+      "trust": "external"
+    }
+  ],
+  "contexts": [
+    {
+      "id": "ctx-reporting-agent",
+      "name": "Reporting Agent Context & Memory",
+      "is_shared": true
+    }
+  ],
+  "policies": [
+    {
+      "id": "POL-001",
+      "name": "Restricted Egress Prohibition",
+      "severity": "critical",
+      "description": "Restricted classification data must never flow to external or untrusted destinations."
+    },
+    {
+      "id": "POL-002",
+      "name": "Confidential Egress Guardrail",
+      "severity": "high",
+      "description": "Confidential data may only flow to internal or explicitly approved external destinations."
+    },
+    {
+      "id": "POL-003",
+      "name": "Unknown Entity Boundary Audit",
+      "severity": "medium",
+      "description": "Entities with unknown classification or trust levels must trigger manual security review."
+    }
+  ]
+}

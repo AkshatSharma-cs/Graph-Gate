@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "graphgate-ci"
+version = "0.1.0"
+description = "Graph-based before/after AI-agent configuration data-flow impact simulator using FalkorDB"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.28.0",
+    "pydantic>=2.6.0",
+    "falkordb>=1.0.0",
+    "pytest>=8.0.0",
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.0"
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+pythonpath = ["."]

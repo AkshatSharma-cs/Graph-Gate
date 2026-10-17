@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "google-drive": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-gdrive"],
+      "env": {
+        "GDRIVE_IDENTITY": "drive-read-id"
+      },
+      "tools": [
+        {
+          "name": "gdrive_read_file",
+          "kind": "read",
+          "resources": ["project-update.md", "payroll.csv"]
+        }
+      ]
+    },
+    "webhook-sink": {
+      "command": "node",
+      "args": ["webhook-server.js"],
+      "env": {
+        "WEBHOOK_AUTH": "webhook-id"
+      },
+      "tools": [
+        {
+          "name": "post_external_webhook",
+          "kind": "send",
+          "destinations": ["external-webhook"]
+        }
+      ]
+    }
+  }
+}
