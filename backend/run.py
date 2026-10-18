@@ -1,4 +1,5 @@
 import sys
+import os
 from pathlib import Path
 import uvicorn
 
@@ -12,9 +13,11 @@ else:
     sys.path.insert(0, str(root_dir / "backend"))
 
 if __name__ == "__main__":
+    port = int(os.getenv("PORT", "8000"))
+    host = os.getenv("HOST", "0.0.0.0")
     print("\n" + "=" * 65)
-    print("  🚀 GraphGate CI — Starting Server on http://127.0.0.1:8000")
-    print("  📊 Dashboard: http://127.0.0.1:8000")
-    print("  🔍 API Docs:  http://127.0.0.1:8000/docs")
+    print(f"  🚀 GraphGate CI — Starting Server on http://{host}:{port}")
+    print(f"  📊 Dashboard: http://127.0.0.1:{port}")
+    print(f"  🔍 API Docs:  http://127.0.0.1:{port}/docs")
     print("=" * 65 + "\n")
-    uvicorn.run("backend.app.main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("backend.app.main:app", host=host, port=port, reload=True)

@@ -165,14 +165,20 @@ def get_scan_sarif(scan_id: str):
     return sarif_data
 
 from pathlib import Path
+import os
 from fastapi.staticfiles import StaticFiles
 
 # If frontend production build exists, serve it
 frontend_dist = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
+if not frontend_dist.is_dir():
+    frontend_dist = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+
 if frontend_dist.is_dir():
     app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="frontend")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("backend.app.main:app", host="127.0.0.1", port=8000, reload=True)
+    port = int(os.getenv("PORT", "8000"))
+    uvicorn.run("backend.app.main:app", host="0.0.0.0", port=port, reload=True)
+
 
