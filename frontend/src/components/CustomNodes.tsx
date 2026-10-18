@@ -3,7 +3,7 @@ import { Handle, Position } from '@xyflow/react';
 
 export const AgentNode = memo(({ data, selected }: any) => (
   <div
-    className={`px-3 py-2 rounded bg-white border transition-all min-w-[170px] shadow-xs ${
+    className={`px-3 py-2.5 rounded bg-white border transition-all w-[180px] max-w-[180px] shadow-xs ${
       selected
         ? 'border-[#286A61] ring-2 ring-[#286A61]/20'
         : 'border-[#DFE5E1] hover:border-[#9BA7A1]'
@@ -21,14 +21,14 @@ export const AgentNode = memo(({ data, selected }: any) => (
         </span>
       )}
     </div>
-    <div className="font-sans font-semibold text-xs text-[#17211F] truncate">{data.label}</div>
+    <div className="font-sans font-semibold text-xs text-[#17211F] truncate" title={data.label}>{data.label}</div>
     <Handle type="source" position={Position.Right} className="!bg-white !w-2.5 !h-2.5 !border-2 !border-[#9BA7A1]" />
   </div>
 ));
 
 export const AgentContextNode = memo(({ data, selected }: any) => (
   <div
-    className={`px-3 py-2 rounded bg-white border transition-all min-w-[170px] shadow-xs ${
+    className={`px-3 py-2.5 rounded bg-white border transition-all w-[180px] max-w-[180px] shadow-xs ${
       selected
         ? 'border-[#286A61] ring-2 ring-[#286A61]/20'
         : 'border-[#DFE5E1] hover:border-[#9BA7A1]'
@@ -44,7 +44,7 @@ export const AgentContextNode = memo(({ data, selected }: any) => (
         shared
       </span>
     </div>
-    <div className="font-sans font-semibold text-xs text-[#17211F] truncate">{data.label}</div>
+    <div className="font-sans font-semibold text-xs text-[#17211F] truncate" title={data.label}>{data.label}</div>
     <Handle type="source" position={Position.Right} className="!bg-white !w-2.5 !h-2.5 !border-2 !border-[#9BA7A1]" />
   </div>
 ));
@@ -53,7 +53,7 @@ export const ToolNode = memo(({ data, selected }: any) => {
   const isSend = data.kind === 'send';
   return (
     <div
-      className={`px-3 py-2 rounded bg-white border transition-all min-w-[170px] shadow-xs ${
+      className={`px-3 py-2.5 rounded bg-white border transition-all w-[180px] max-w-[180px] shadow-xs ${
         selected
           ? 'border-[#286A61] ring-2 ring-[#286A61]/20'
           : 'border-[#DFE5E1] hover:border-[#9BA7A1]'
@@ -75,7 +75,7 @@ export const ToolNode = memo(({ data, selected }: any) => {
           {data.kind || 'tool'}
         </span>
       </div>
-      <div className="font-sans font-semibold text-xs text-[#17211F] truncate">{data.label}</div>
+      <div className="font-sans font-semibold text-xs text-[#17211F] truncate" title={data.label}>{data.label}</div>
       <Handle type="source" position={Position.Right} className="!bg-white !w-2.5 !h-2.5 !border-2 !border-[#9BA7A1]" />
     </div>
   );
@@ -83,7 +83,7 @@ export const ToolNode = memo(({ data, selected }: any) => {
 
 export const IdentityNode = memo(({ data, selected }: any) => (
   <div
-    className={`px-3 py-2 rounded bg-white border transition-all min-w-[170px] shadow-xs ${
+    className={`px-3 py-2.5 rounded bg-white border transition-all w-[180px] max-w-[180px] shadow-xs ${
       selected
         ? 'border-[#A15C07] ring-2 ring-[#A15C07]/20'
         : 'border-[#DFE5E1] hover:border-[#9BA7A1]'
@@ -99,7 +99,7 @@ export const IdentityNode = memo(({ data, selected }: any) => (
         {data.principal_type || 'service_account'}
       </span>
     </div>
-    <div className="font-sans font-semibold text-xs text-[#17211F] truncate">{data.label}</div>
+    <div className="font-sans font-semibold text-xs text-[#17211F] truncate" title={data.label}>{data.label}</div>
     <Handle type="source" position={Position.Right} className="!bg-white !w-2.5 !h-2.5 !border-2 !border-[#9BA7A1]" />
   </div>
 ));
@@ -110,7 +110,7 @@ export const ResourceNode = memo(({ data, selected }: any) => {
 
   return (
     <div
-      className={`px-3 py-2 rounded bg-white border transition-all min-w-[180px] shadow-xs ${
+      className={`px-3 py-2.5 rounded bg-white border transition-all w-[180px] max-w-[180px] shadow-xs ${
         selected
           ? 'border-[#B42318] ring-2 ring-[#B42318]/20'
           : isRestricted
@@ -142,7 +142,7 @@ export const ResourceNode = memo(({ data, selected }: any) => {
           {data.classification || 'unknown'}
         </span>
       </div>
-      <div className="font-mono font-semibold text-xs text-[#17211F] truncate">{data.label}</div>
+      <div className="font-mono font-semibold text-xs text-[#17211F] truncate" title={data.label}>{data.label}</div>
       <Handle type="source" position={Position.Right} className="!bg-white !w-2.5 !h-2.5 !border-2 !border-[#9BA7A1]" />
     </div>
   );
@@ -153,7 +153,7 @@ export const DestinationNode = memo(({ data, selected }: any) => {
 
   return (
     <div
-      className={`px-3 py-2 rounded bg-white border transition-all min-w-[180px] shadow-xs ${
+      className={`px-3 py-2.5 rounded bg-white border transition-all w-[180px] max-w-[180px] shadow-xs ${
         selected
           ? 'border-[#B42318] ring-2 ring-[#B42318]/20'
           : isExternal
@@ -179,17 +179,18 @@ export const DestinationNode = memo(({ data, selected }: any) => {
           {data.trust || 'external'}
         </span>
       </div>
-      <div className="font-mono font-semibold text-xs text-[#17211F] truncate">{data.label}</div>
+      <div className="font-mono font-semibold text-xs text-[#17211F] truncate" title={data.label}>{data.label}</div>
       <Handle type="source" position={Position.Right} className="!bg-white !w-2.5 !h-2.5 !border-2 !border-[#9BA7A1]" />
     </div>
   );
 });
 
 export const DataClassNode = memo(({ data }: any) => (
-  <div className="px-2.5 py-1 rounded bg-[#F5F6F4] border border-[#DFE5E1] text-[#64716C] flex items-center gap-1 text-[11px] font-mono shadow-2xs">
+  <div className="px-2.5 py-1.5 rounded bg-[#F5F6F4] border border-[#DFE5E1] text-[#64716C] flex items-center justify-between gap-1.5 text-[11px] font-mono shadow-2xs w-[140px] max-w-[140px]">
     <Handle type="target" position={Position.Left} className="!bg-white !w-2 !h-2 !border !border-[#9BA7A1]" />
     <span className="text-[#64716C]">CLASS:</span>
-    <span className="font-semibold text-[#17211F] uppercase">{data.label}</span>
+    <span className="font-semibold text-[#17211F] uppercase truncate" title={data.label}>{data.label}</span>
+    <Handle type="source" position={Position.Right} className="!bg-white !w-2 !h-2 !border !border-[#9BA7A1]" />
   </div>
 ));
 

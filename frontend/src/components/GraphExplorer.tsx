@@ -35,13 +35,13 @@ export const GraphExplorer: React.FC<GraphExplorerProps> = ({
     const hasHighlight = highlightedNodeIds.length > 0 || highlightedEdgeIds.length > 0;
 
     const typeColumnMap: Record<string, number> = {
-      Resource: 0,
       DataClass: 0,
-      Identity: 1,
-      Tool: 2,
-      AgentContext: 3,
-      Agent: 4,
-      Destination: 6,
+      Resource: 1,
+      Identity: 2,
+      Tool: 3,
+      AgentContext: 4,
+      Agent: 5,
+      Destination: 8,
     };
 
     const typeCounters: Record<number, number> = {};
@@ -54,16 +54,14 @@ export const GraphExplorer: React.FC<GraphExplorerProps> = ({
     const visibleNodeIds = new Set(filteredNodes.map(n => n.id));
 
     filteredNodes.forEach((n) => {
-      let col = typeColumnMap[n.node_type] ?? 3;
+      let col = typeColumnMap[n.node_type] ?? 4;
 
       if (n.node_type === 'Tool' && n.data?.kind === 'send') {
-        col = 5;
-      }
-      if (n.node_type === 'Identity' && !graphData.edges.some(e => e.source === n.id && e.relationship === 'CAN_READ')) {
-        col = 5.5;
-      }
-      if (n.node_type === 'DataClass') {
-        col = -0.7;
+        col = 6;
+      } else if (n.node_type === 'Identity' && !graphData.edges.some(e => e.source === n.id && e.relationship === 'CAN_READ')) {
+        col = 7;
+      } else if (n.node_type === 'Destination') {
+        col = 8;
       }
 
       typeCounters[col] = (typeCounters[col] || 0) + 1;
@@ -75,8 +73,8 @@ export const GraphExplorer: React.FC<GraphExplorerProps> = ({
         id: n.id,
         type: n.node_type,
         position: {
-          x: col * 260 + 24,
-          y: rowIdx * 110 + 40,
+          x: col * 235 + 30,
+          y: rowIdx * 115 + 40,
         },
         data: {
           ...n.data,
@@ -101,7 +99,8 @@ export const GraphExplorer: React.FC<GraphExplorerProps> = ({
         id: e.id,
         source: e.source,
         target: e.target,
-        animated: isEdgeHighlighted,
+        animated: false,
+        zIndex: isEdgeHighlighted ? 10 : 1,
         label: e.relationship,
         labelStyle: {
           fontSize: '9px',
@@ -119,7 +118,7 @@ export const GraphExplorer: React.FC<GraphExplorerProps> = ({
         labelBgBorderRadius: 4,
         style: {
           stroke: isEdgeHighlighted ? '#B42318' : isMuted ? '#DFE5E1' : '#9BA7A1',
-          strokeWidth: isEdgeHighlighted ? 2.2 : 1.2,
+          strokeWidth: isEdgeHighlighted ? 2.5 : 1.2,
           opacity: isMuted ? 0.35 : 1,
         },
         className: isEdgeHighlighted ? 'risky-edge-path' : '',

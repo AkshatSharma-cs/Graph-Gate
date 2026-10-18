@@ -80,12 +80,16 @@
 }
 
 /* Restrained, solid risk edge without continuous glowing noise */
-.risky-edge-path {
+.risky-edge-path,
+.risky-edge-path path,
+.risky-edge-path .react-flow__edge-path {
   stroke: #B42318 !important;
   stroke-width: 2.5px !important;
 }
 
-.safe-edge-path {
+.safe-edge-path,
+.safe-edge-path path,
+.safe-edge-path .react-flow__edge-path {
   stroke: #9BA7A1 !important;
   stroke-width: 1.5px !important;
 }

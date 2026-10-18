@@ -112,7 +112,7 @@ export const FindingsTable: React.FC<FindingsTableProps> = ({
         <table className="w-full text-left text-xs">
           <thead className="bg-[#FBFBFA] border-b border-[#DFE5E1] text-[#64716C] font-mono uppercase text-[11px] tracking-wider">
             <tr>
-              <th className="px-5 py-2.5">Status / Severity</th>
+              <th className="px-5 py-2.5 border-l-4 border-l-transparent">Status / Severity</th>
               <th className="px-5 py-2.5">Policy & ID</th>
               <th className="px-5 py-2.5">Sensitive Source</th>
               <th className="px-5 py-2.5">Agent Pipeline</th>
@@ -128,10 +128,12 @@ export const FindingsTable: React.FC<FindingsTableProps> = ({
                   key={f.id}
                   onClick={() => onSelectFinding(f)}
                   className={`cursor-pointer transition-colors ${
-                    isSelected ? 'bg-[#F5F6F4] border-l-4 border-l-[#286A61]' : 'hover:bg-[#F5F6F4]/60'
+                    isSelected ? 'bg-[#F5F6F4]' : 'hover:bg-[#F5F6F4]/60'
                   }`}
                 >
-                  <td className="px-5 py-3.5 whitespace-nowrap">
+                  <td className={`px-5 py-3.5 whitespace-nowrap border-l-4 transition-colors ${
+                    isSelected ? 'border-l-[#286A61]' : 'border-l-transparent'
+                  }`}>
                     <div className="flex items-center gap-1.5">
                       {getStatusBadge(f.status)}
                       {getSeverityBadge(f.severity)}
