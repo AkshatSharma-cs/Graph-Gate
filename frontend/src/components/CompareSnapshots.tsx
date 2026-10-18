@@ -1,6 +1,6 @@
 import React from 'react';
 import { ConfigurationSnapshot } from '../types';
-import { ArrowRight, Plus, Check, ShieldAlert, GitCompare, FileCode } from 'lucide-react';
+import { ArrowRight, Plus, GitCompare, GitBranch } from 'lucide-react';
 
 interface CompareSnapshotsProps {
   baseline: ConfigurationSnapshot;
@@ -21,63 +21,63 @@ export const CompareSnapshots: React.FC<CompareSnapshotsProps> = ({ baseline, ca
   const addedSendDestinations = candSendDestinations.filter(d => !baseSendDestinations.has(d));
 
   return (
-    <div className="space-y-6">
-      {/* Overview callout */}
-      <div className="bg-white p-5 rounded-xl border border-border shadow-xs flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-indigo-50 text-indigo-700 rounded-lg">
-            <GitCompare size={20} />
-          </div>
+    <div className="space-y-4">
+      {/* Overview Ribbon */}
+      <div className="bg-surface-100 p-4 rounded border border-hairline flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-subtle">
+        <div className="flex items-center gap-2.5">
+          <span className="p-1.5 bg-surface-200 text-linear rounded-xs border border-hairline">
+            <GitCompare size={15} />
+          </span>
           <div>
-            <h3 className="font-bold text-sm text-ink">Configuration Delta Analysis</h3>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Diffing declared capabilities, identities, and scopes between baseline branch and candidate PR
+            <h3 className="font-mono text-xs font-bold text-ink uppercase tracking-wider">
+              Declarative Capability Delta
+            </h3>
+            <p className="text-xs text-ink-muted mt-0.5">
+              Comparing toolchain registrations, identity permissions, and egress sinks
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 text-xs">
-          <div className="px-3 py-1.5 bg-slate-50 rounded-lg border border-border font-mono">
-            <span className="text-slate-500">Tools: </span>
-            <span className="font-semibold text-ink">{baseline.tools.length}</span>
-            <ArrowRight size={11} className="inline mx-1 text-slate-400" />
-            <span className="font-semibold text-indigo-600">{candidate.tools.length}</span>
+        <div className="flex items-center gap-2 font-mono text-xs">
+          <div className="px-2.5 py-1 bg-surface-50 rounded-xs border border-hairline">
+            <span className="text-ink-muted">TOOLS: </span>
+            <span className="text-ink font-semibold">{baseline.tools.length}</span>
+            <ArrowRight size={10} className="inline mx-1 text-ink-faint" />
+            <span className="text-linear font-semibold">{candidate.tools.length}</span>
           </div>
 
-          <div className="px-3 py-1.5 bg-slate-50 rounded-lg border border-border font-mono">
-            <span className="text-slate-500">Read Resources: </span>
-            <span className="font-semibold text-ink">{baseReadResources.size}</span>
-            <ArrowRight size={11} className="inline mx-1 text-slate-400" />
-            <span className="font-semibold text-indigo-600">{candReadResources.length}</span>
+          <div className="px-2.5 py-1 bg-surface-50 rounded-xs border border-hairline">
+            <span className="text-ink-muted">SCOPES: </span>
+            <span className="text-ink font-semibold">{baseReadResources.size}</span>
+            <ArrowRight size={10} className="inline mx-1 text-ink-faint" />
+            <span className="text-linear font-semibold">{candReadResources.length}</span>
           </div>
         </div>
       </div>
 
-      {/* Side by side comparison */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Baseline Snapshot */}
-        <div className="bg-white rounded-xl border border-border shadow-xs overflow-hidden flex flex-col">
-          <div className="px-5 py-3.5 bg-slate-50 border-b border-border flex items-center justify-between">
+      {/* Side-by-Side Comparison */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Baseline (main) */}
+        <div className="bg-surface-100 rounded border border-hairline shadow-subtle overflow-hidden flex flex-col">
+          <div className="px-4 py-2.5 bg-surface-50 border-b border-hairline flex items-center justify-between font-mono">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-xs text-ink uppercase tracking-wider">Baseline Branch (main)</span>
-              <span className="text-[10px] px-2 py-0.5 bg-slate-200 text-slate-700 rounded font-semibold">
-                current
-              </span>
+              <GitBranch size={12} className="text-ink-muted" />
+              <span className="text-xs font-semibold text-ink uppercase tracking-wider">BASELINE (main)</span>
             </div>
-            <span className="text-xs font-mono text-slate-400">{baseline.agents.length} agent(s)</span>
+            <span className="text-[10px] text-ink-faint">{baseline.agents.length} agent(s)</span>
           </div>
 
-          <div className="p-5 space-y-4 text-xs flex-1">
+          <div className="p-4 space-y-4 text-xs font-mono flex-1">
             {/* Tools */}
             <div>
-              <div className="font-semibold text-slate-500 mb-2 uppercase text-[10px] tracking-wider">
+              <div className="text-ink-faint text-[10px] uppercase font-semibold mb-1.5 tracking-wider">
                 Configured Tools
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 {baseline.tools.map(t => (
-                  <div key={t.id} className="p-2.5 rounded-lg border border-border bg-slate-50/50 flex items-center justify-between font-mono text-xs">
-                    <span className="font-semibold text-ink">{t.id}</span>
-                    <span className="text-[10px] uppercase font-sans font-medium px-2 py-0.5 rounded bg-slate-200 text-slate-700">
+                  <div key={t.id} className="p-2 rounded-xs border border-hairline bg-surface-50 flex items-center justify-between">
+                    <span className="text-ink font-medium">{t.id}</span>
+                    <span className="text-[10px] uppercase px-1.5 py-0.2 rounded-xs bg-surface-200 text-ink-muted">
                       {t.kind}
                     </span>
                   </div>
@@ -87,29 +87,29 @@ export const CompareSnapshots: React.FC<CompareSnapshotsProps> = ({ baseline, ca
 
             {/* Read Scopes */}
             <div>
-              <div className="font-semibold text-slate-500 mb-2 uppercase text-[10px] tracking-wider">
+              <div className="text-ink-faint text-[10px] uppercase font-semibold mb-1.5 tracking-wider">
                 Permitted Read Scopes
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 {baseline.identities.flatMap(i => i.can_read.map(r => (
-                  <div key={`${i.id}-${r}`} className="p-2 rounded-lg border border-border bg-white flex items-center justify-between font-mono text-xs">
-                    <span className="text-slate-700">{r}</span>
-                    <span className="text-[10px] text-slate-400">via {i.id}</span>
+                  <div key={`${i.id}-${r}`} className="p-2 rounded-xs border border-hairline bg-surface-50 flex items-center justify-between">
+                    <span className="text-ink-secondary">{r}</span>
+                    <span className="text-[10px] text-ink-faint">via {i.id}</span>
                   </div>
                 )))}
               </div>
             </div>
 
-            {/* Destinations */}
+            {/* Egress Sinks */}
             <div>
-              <div className="font-semibold text-slate-500 mb-2 uppercase text-[10px] tracking-wider">
-                Egress Targets
+              <div className="text-ink-faint text-[10px] uppercase font-semibold mb-1.5 tracking-wider">
+                Egress Sinks
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 {baseline.destinations.map(d => (
-                  <div key={d.id} className="p-2 rounded-lg border border-border bg-white flex items-center justify-between font-mono text-xs">
-                    <span className="text-slate-700">{d.id}</span>
-                    <span className="text-[10px] uppercase font-sans font-semibold text-slate-500">[{d.trust}]</span>
+                  <div key={d.id} className="p-2 rounded-xs border border-hairline bg-surface-50 flex items-center justify-between">
+                    <span className="text-ink-secondary">{d.id}</span>
+                    <span className="text-[10px] uppercase text-signal-green">[{d.trust}]</span>
                   </div>
                 ))}
               </div>
@@ -117,47 +117,45 @@ export const CompareSnapshots: React.FC<CompareSnapshotsProps> = ({ baseline, ca
           </div>
         </div>
 
-        {/* Candidate Snapshot */}
-        <div className="bg-white rounded-xl border border-indigo-200 shadow-xs overflow-hidden flex flex-col">
-          <div className="px-5 py-3.5 bg-indigo-50/60 border-b border-indigo-100 flex items-center justify-between">
+        {/* Candidate (PR) */}
+        <div className="bg-surface-100 rounded border border-hairline shadow-subtle overflow-hidden flex flex-col">
+          <div className="px-4 py-2.5 bg-surface-50 border-b border-hairline flex items-center justify-between font-mono">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-xs text-indigo-900 uppercase tracking-wider">Candidate Pull Request</span>
-              <span className="text-[10px] px-2 py-0.5 bg-indigo-600 text-white rounded font-bold uppercase">
-                PR #42
-              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-linear"></span>
+              <span className="text-xs font-semibold text-ink uppercase tracking-wider">CANDIDATE (PR #42)</span>
             </div>
-            <span className="text-xs font-mono text-indigo-600 font-semibold">{candidate.agents.length} agent(s)</span>
+            <span className="text-[10px] text-linear font-semibold">DELTA EVALUATED</span>
           </div>
 
-          <div className="p-5 space-y-4 text-xs flex-1">
-            {/* Tools */}
+          <div className="p-4 space-y-4 text-xs font-mono flex-1">
+            {/* Tools with delta */}
             <div>
-              <div className="font-semibold text-slate-500 mb-2 uppercase text-[10px] tracking-wider">
+              <div className="text-ink-faint text-[10px] uppercase font-semibold mb-1.5 tracking-wider">
                 Configured Tools (with delta)
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 {candidate.tools.map(t => {
                   const isAdded = addedTools.includes(t.id);
                   return (
                     <div
                       key={t.id}
-                      className={`p-2.5 rounded-lg border flex items-center justify-between font-mono text-xs transition-all ${
+                      className={`p-2 rounded-xs border flex items-center justify-between transition-colors ${
                         isAdded
-                          ? 'border-indigo-300 bg-indigo-50/70 text-indigo-950 font-bold'
-                          : 'border-border bg-slate-50/50 text-ink'
+                          ? 'border-linear/40 bg-linear-subtle text-ink'
+                          : 'border-hairline bg-surface-50 text-ink-secondary'
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        {isAdded && <Plus size={13} className="text-indigo-600 shrink-0" />}
-                        <span>{t.id}</span>
+                        {isAdded && <Plus size={11} className="text-linear" />}
+                        <span className="font-medium">{t.id}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         {isAdded && (
-                          <span className="text-[9px] font-sans uppercase font-bold text-indigo-700 bg-indigo-100 px-1.5 py-0.5 rounded">
-                            Added In PR
+                          <span className="text-[9px] uppercase font-bold text-linear px-1.5 py-0.2 rounded-xs bg-linear/20">
+                            + ADDED
                           </span>
                         )}
-                        <span className="text-[10px] uppercase font-sans font-medium px-2 py-0.5 rounded bg-slate-200 text-slate-700">
+                        <span className="text-[10px] uppercase px-1.5 py-0.2 rounded-xs bg-surface-200 text-ink-muted">
                           {t.kind}
                         </span>
                       </div>
@@ -167,34 +165,34 @@ export const CompareSnapshots: React.FC<CompareSnapshotsProps> = ({ baseline, ca
               </div>
             </div>
 
-            {/* Read Scopes */}
+            {/* Read Scopes with delta */}
             <div>
-              <div className="font-semibold text-slate-500 mb-2 uppercase text-[10px] tracking-wider">
+              <div className="text-ink-faint text-[10px] uppercase font-semibold mb-1.5 tracking-wider">
                 Permitted Read Scopes (with delta)
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 {candidate.identities.flatMap(i => i.can_read.map(r => {
                   const isAdded = addedReadResources.includes(r);
                   return (
                     <div
                       key={`${i.id}-${r}`}
-                      className={`p-2 rounded-lg border flex items-center justify-between font-mono text-xs ${
+                      className={`p-2 rounded-xs border flex items-center justify-between ${
                         isAdded
-                          ? 'border-risk-300 bg-risk-50/60 text-risk-900 font-bold'
-                          : 'border-border bg-white text-slate-700'
+                          ? 'border-signal-red/40 bg-signal-red-subtle text-signal-red'
+                          : 'border-hairline bg-surface-50 text-ink-secondary'
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        {isAdded && <Plus size={12} className="text-risk-600 shrink-0" />}
-                        <span>{r}</span>
+                        {isAdded && <Plus size={11} className="text-signal-red" />}
+                        <span className="font-medium">{r}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         {isAdded && (
-                          <span className="text-[9px] font-sans uppercase font-bold text-risk-700 bg-risk-100 px-1.5 py-0.5 rounded">
-                            Widened Scope
+                          <span className="text-[9px] uppercase font-bold px-1.5 py-0.2 rounded-xs bg-signal-red/20 text-signal-red">
+                            WIDENED SCOPE
                           </span>
                         )}
-                        <span className="text-[10px] text-slate-400">via {i.id}</span>
+                        <span className="text-[10px] text-ink-faint">via {i.id}</span>
                       </div>
                     </div>
                   );
@@ -202,34 +200,34 @@ export const CompareSnapshots: React.FC<CompareSnapshotsProps> = ({ baseline, ca
               </div>
             </div>
 
-            {/* Destinations */}
+            {/* Egress Sinks with delta */}
             <div>
-              <div className="font-semibold text-slate-500 mb-2 uppercase text-[10px] tracking-wider">
-                Egress Targets (with delta)
+              <div className="text-ink-faint text-[10px] uppercase font-semibold mb-1.5 tracking-wider">
+                Egress Sinks (with delta)
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 {candidate.destinations.map(d => {
                   const isAdded = addedSendDestinations.includes(d.id);
                   return (
                     <div
                       key={d.id}
-                      className={`p-2 rounded-lg border flex items-center justify-between font-mono text-xs ${
+                      className={`p-2 rounded-xs border flex items-center justify-between ${
                         isAdded
-                          ? 'border-risk-300 bg-risk-50/60 text-risk-900 font-bold'
-                          : 'border-border bg-white text-slate-700'
+                          ? 'border-signal-red/40 bg-signal-red-subtle text-signal-red'
+                          : 'border-hairline bg-surface-50 text-ink-secondary'
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        {isAdded && <Plus size={12} className="text-risk-600 shrink-0" />}
-                        <span>{d.id}</span>
+                        {isAdded && <Plus size={11} className="text-signal-red" />}
+                        <span className="font-medium">{d.id}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         {isAdded && (
-                          <span className="text-[9px] font-sans uppercase font-bold text-risk-700 bg-risk-100 px-1.5 py-0.5 rounded">
-                            New Egress Sink
+                          <span className="text-[9px] uppercase font-bold px-1.5 py-0.2 rounded-xs bg-signal-red/20 text-signal-red">
+                            NEW SINK
                           </span>
                         )}
-                        <span className="text-[10px] uppercase font-sans font-semibold text-slate-500">[{d.trust}]</span>
+                        <span className="text-[10px] uppercase font-semibold text-signal-red">[{d.trust}]</span>
                       </div>
                     </div>
                   );

@@ -11,7 +11,7 @@ import {
 } from '@xyflow/react';
 import { GraphData } from '../types';
 import { nodeTypes } from './CustomNodes';
-import { Eye, ShieldAlert, Sparkles } from 'lucide-react';
+import { Eye, ShieldAlert, Layers } from 'lucide-react';
 
 interface GraphExplorerProps {
   graphData: GraphData;
@@ -25,7 +25,7 @@ export const GraphExplorer: React.FC<GraphExplorerProps> = ({
   graphData,
   highlightedNodeIds = [],
   highlightedEdgeIds = [],
-  title = "Agent Data-Flow Capability Graph",
+  title = "FalkorDB Data-Flow Reachability Topology",
   onNodeClick,
 }) => {
   const [onlyRisky, setOnlyRisky] = useState(false);
@@ -33,8 +33,7 @@ export const GraphExplorer: React.FC<GraphExplorerProps> = ({
   // Layout calculation
   const { nodes, edges } = useMemo(() => {
     const hasHighlight = highlightedNodeIds.length > 0 || highlightedEdgeIds.length > 0;
-    
-    // Categorize by entity type for horizontal column layering
+
     const typeColumnMap: Record<string, number> = {
       Resource: 0,
       DataClass: 0,
@@ -46,10 +45,8 @@ export const GraphExplorer: React.FC<GraphExplorerProps> = ({
     };
 
     const typeCounters: Record<number, number> = {};
-
     const flowNodes: Node[] = [];
 
-    // Filter nodes if onlyRisky toggled
     const filteredNodes = onlyRisky
       ? graphData.nodes.filter(n => highlightedNodeIds.includes(n.id) || n.data?.classification === 'restricted')
       : graphData.nodes;
@@ -58,17 +55,15 @@ export const GraphExplorer: React.FC<GraphExplorerProps> = ({
 
     filteredNodes.forEach((n) => {
       let col = typeColumnMap[n.node_type] ?? 3;
-      
-      // Separate send tools from read tools in columns
+
       if (n.node_type === 'Tool' && n.data?.kind === 'send') {
         col = 5;
       }
       if (n.node_type === 'Identity' && !graphData.edges.some(e => e.source === n.id && e.relationship === 'CAN_READ')) {
-        // Send identity
         col = 5.5;
       }
       if (n.node_type === 'DataClass') {
-        col = -0.8;
+        col = -0.7;
       }
 
       typeCounters[col] = (typeCounters[col] || 0) + 1;
@@ -80,8 +75,8 @@ export const GraphExplorer: React.FC<GraphExplorerProps> = ({
         id: n.id,
         type: n.node_type,
         position: {
-          x: col * 260 + 40,
-          y: rowIdx * 120 + 60,
+          x: col * 250 + 20,
+          y: rowIdx * 105 + 40,
         },
         data: {
           ...n.data,
@@ -89,7 +84,7 @@ export const GraphExplorer: React.FC<GraphExplorerProps> = ({
         },
         selected: isNodeHighlighted,
         style: {
-          opacity: hasHighlight && !isNodeHighlighted ? 0.35 : 1,
+          opacity: hasHighlight && !isNodeHighlighted ? 0.25 : 1,
         },
       });
     });
@@ -109,25 +104,28 @@ export const GraphExplorer: React.FC<GraphExplorerProps> = ({
         animated: isEdgeHighlighted,
         label: e.relationship,
         labelStyle: {
-          fontSize: '9px',
+          fontSize: '8px',
+          fontFamily: "'JetBrains Mono', monospace",
           fontWeight: 600,
-          fill: isEdgeHighlighted ? '#DC2626' : '#64748B',
+          fill: isEdgeHighlighted ? '#EF4444' : '#6B7280',
         },
         labelBgStyle: {
-          fill: '#FFFFFF',
-          fillOpacity: 0.85,
+          fill: '#0F1012',
+          fillOpacity: 0.9,
         },
+        labelBgPadding: [4, 2],
+        labelBgBorderRadius: 2,
         style: {
-          stroke: isEdgeHighlighted ? '#DC2626' : isMuted ? '#CBD5E1' : '#94A3B8',
-          strokeWidth: isEdgeHighlighted ? 2.5 : 1.5,
-          opacity: isMuted ? 0.3 : 1,
+          stroke: isEdgeHighlighted ? '#EF4444' : isMuted ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.16)',
+          strokeWidth: isEdgeHighlighted ? 2.2 : 1.2,
+          opacity: isMuted ? 0.2 : 1,
         },
         className: isEdgeHighlighted ? 'risky-edge-path' : '',
         markerEnd: {
           type: MarkerType.ArrowClosed,
-          color: isEdgeHighlighted ? '#DC2626' : isMuted ? '#CBD5E1' : '#94A3B8',
-          width: 16,
-          height: 16,
+          color: isEdgeHighlighted ? '#EF4444' : isMuted ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.2)',
+          width: 14,
+          height: 14,
         },
       });
     });
@@ -136,57 +134,60 @@ export const GraphExplorer: React.FC<GraphExplorerProps> = ({
   }, [graphData, highlightedNodeIds, highlightedEdgeIds, onlyRisky]);
 
   return (
-    <div className="flex flex-col h-[520px] bg-white rounded-xl border border-border shadow-sm overflow-hidden">
-      {/* Top toolbar */}
-      <div className="flex items-center justify-between px-4 py-2.5 bg-slate-50 border-b border-border">
-        <div className="flex items-center gap-2">
-          <span className="font-semibold text-xs text-ink">{title}</span>
-          <span className="text-[10px] text-slate-500 font-mono">
-            {nodes.length} nodes · {edges.length} relationships
+    <div className="flex flex-col h-[500px] bg-ground rounded border border-hairline shadow-subtle overflow-hidden">
+      {/* Workbench Toolbar */}
+      <div className="flex items-center justify-between px-4 py-2.5 bg-surface-50 border-b border-hairline select-none">
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-xs text-ink font-semibold flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-linear"></span>
+            <span>{title}</span>
+          </span>
+          <span className="text-[10px] text-ink-muted font-mono">
+            [{nodes.length} nodes · {edges.length} edges]
           </span>
         </div>
 
         <div className="flex items-center gap-3">
           {highlightedNodeIds.length > 0 && (
-            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-risk-50 border border-risk-200 text-risk-700 rounded-md text-xs font-medium animate-pulse">
-              <ShieldAlert size={13} />
-              <span>Active Path Witness Highlighted</span>
+            <div className="flex items-center gap-1.5 px-2 py-0.5 bg-signal-red-subtle border border-signal-red/30 text-signal-red rounded-xs text-[11px] font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-signal-red animate-pulse" />
+              <span>WITNESS PATH ACTIVE</span>
             </div>
           )}
 
           <button
             onClick={() => setOnlyRisky(!onlyRisky)}
-            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono rounded-xs border transition-colors ${
               onlyRisky
-                ? 'bg-indigo-600 text-white'
-                : 'bg-white border border-border text-slate-700 hover:bg-slate-100'
+                ? 'bg-linear text-white border-linear'
+                : 'bg-surface-100 border-hairline text-ink-secondary hover:text-ink hover:bg-surface-200'
             }`}
           >
-            <Eye size={13} />
-            <span>{onlyRisky ? 'Show Full Graph' : 'Focus Risky Subgraph'}</span>
+            <Eye size={12} />
+            <span>{onlyRisky ? 'VIEW FULL TOPOLOGY' : 'FILTER RISKY SUBGRAPH'}</span>
           </button>
         </div>
       </div>
 
       {/* React Flow Canvas */}
-      <div className="flex-1 w-full h-full relative">
+      <div className="flex-1 w-full h-full relative bg-ground">
         <ReactFlow
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
           onNodeClick={(_, node) => onNodeClick && onNodeClick(node.id, node.data)}
           fitView
-          fitViewOptions={{ padding: 0.2 }}
+          fitViewOptions={{ padding: 0.15 }}
           minZoom={0.2}
           maxZoom={1.5}
           proOptions={{ hideAttribution: true }}
         >
-          <Background variant={BackgroundVariant.Dots} gap={16} size={1} color="#CBD5E1" />
-          <Controls showInteractive={false} className="!bg-white !border !border-border !shadow-sm !rounded-lg" />
+          <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="rgba(255, 255, 255, 0.08)" />
+          <Controls showInteractive={false} />
           <MiniMap
-            nodeStrokeColor="#94A3B8"
-            nodeColor="#E2E8F0"
-            className="!bg-white/90 !border !border-border !rounded-lg !shadow-sm"
+            nodeStrokeColor="rgba(255, 255, 255, 0.2)"
+            nodeColor="#1A1B20"
+            maskColor="rgba(8, 9, 10, 0.75)"
           />
         </ReactFlow>
       </div>

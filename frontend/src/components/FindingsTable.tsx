@@ -1,6 +1,6 @@
 import React from 'react';
 import { PathFinding } from '../types';
-import { ShieldAlert, ShieldCheck, AlertCircle, Sparkles, ArrowRight, Eye, Wrench } from 'lucide-react';
+import { ArrowRight, Eye, Wrench, ShieldCheck } from 'lucide-react';
 
 interface FindingsTableProps {
   findings: PathFinding[];
@@ -18,26 +18,58 @@ export const FindingsTable: React.FC<FindingsTableProps> = ({
   const getSeverityBadge = (severity: string) => {
     switch (severity) {
       case 'critical':
-        return <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-risk-100 text-risk-700 border border-risk-200">Critical</span>;
+        return (
+          <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-red-subtle text-signal-red border border-signal-red/30">
+            CRITICAL
+          </span>
+        );
       case 'high':
-        return <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">High</span>;
+        return (
+          <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-amber-subtle text-signal-amber border border-signal-amber/30">
+            HIGH
+          </span>
+        );
       case 'medium':
-        return <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800 border border-yellow-200">Medium</span>;
+        return (
+          <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-amber-subtle text-signal-amber border border-signal-amber/20">
+            MEDIUM
+          </span>
+        );
       default:
-        return <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">Info</span>;
+        return (
+          <span className="text-[10px] font-mono uppercase px-1.5 py-0.2 rounded-xs bg-surface-200 text-ink-muted border border-hairline">
+            INFO
+          </span>
+        );
     }
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'new':
-        return <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-risk-600 text-white animate-pulse">New Path</span>;
+        return (
+          <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-red text-white">
+            NEW
+          </span>
+        );
       case 'pre_existing':
-        return <span className="text-[10px] font-medium uppercase px-2 py-0.5 rounded-md bg-slate-200 text-slate-700">Pre-existing</span>;
+        return (
+          <span className="text-[9px] font-mono font-medium uppercase px-1.5 py-0.2 rounded-xs bg-surface-200 text-ink-muted border border-hairline">
+            EXISTING
+          </span>
+        );
       case 'resolved':
-        return <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-success-600 text-white">Resolved</span>;
+        return (
+          <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-green text-white">
+            RESOLVED
+          </span>
+        );
       case 'needs_review':
-        return <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-amber-500 text-white">Needs Review</span>;
+        return (
+          <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-amber text-white">
+            REVIEW
+          </span>
+        );
       default:
         return null;
     }
@@ -45,12 +77,14 @@ export const FindingsTable: React.FC<FindingsTableProps> = ({
 
   if (findings.length === 0) {
     return (
-      <div className="bg-white p-8 rounded-xl border border-border text-center shadow-xs">
-        <div className="inline-flex p-3 bg-success-50 text-success-600 rounded-full mb-3">
-          <ShieldCheck size={28} />
+      <div className="bg-surface-100 p-8 rounded border border-hairline text-center shadow-subtle">
+        <div className="inline-flex p-2.5 bg-signal-green-subtle text-signal-green rounded-xs mb-2.5">
+          <ShieldCheck size={24} />
         </div>
-        <h3 className="text-sm font-bold text-ink">No Violating Paths Detected</h3>
-        <p className="text-xs text-slate-500 max-w-md mx-auto mt-1">
+        <h3 className="font-mono text-xs font-bold text-ink uppercase tracking-wider">
+          No Policy Violations Detected
+        </h3>
+        <p className="text-xs text-ink-muted max-w-sm mx-auto mt-1">
           Candidate configuration does not construct any data flows violating active data boundary policies.
         </p>
       </div>
@@ -58,32 +92,35 @@ export const FindingsTable: React.FC<FindingsTableProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-xl border border-border shadow-xs overflow-hidden">
-      <div className="px-5 py-3.5 border-b border-border flex items-center justify-between">
+    <div className="bg-surface-100 rounded border border-hairline shadow-subtle overflow-hidden">
+      {/* Table Header */}
+      <div className="px-4 py-3 border-b border-hairline flex items-center justify-between bg-surface-50">
         <div>
-          <h3 className="font-bold text-xs text-ink uppercase tracking-wider">Identified Data-Flow Violations</h3>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Enumerated source-to-sink multi-hop compositions across agents, identities, and tools
+          <h3 className="font-mono font-bold text-xs text-ink uppercase tracking-wider">
+            Reachable Policy Violations
+          </h3>
+          <p className="text-xs text-ink-muted mt-0.5">
+            Cypher-enumerated multi-hop source-to-sink paths composed across agent toolchains
           </p>
         </div>
-        <span className="text-xs font-mono px-2 py-1 bg-slate-100 rounded text-slate-600">
-          {findings.length} total findings
+        <span className="text-[11px] font-mono px-2 py-0.5 bg-surface-200 rounded-xs text-ink-secondary border border-hairline">
+          {findings.length} findings
         </span>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
-          <thead className="bg-slate-50 border-b border-border text-slate-500 font-semibold uppercase text-[10px] tracking-wider">
+          <thead className="bg-surface-50/60 border-b border-hairline text-ink-muted font-mono uppercase text-[10px] tracking-wider">
             <tr>
-              <th className="px-5 py-3">Status / Severity</th>
-              <th className="px-4 py-3">Policy Rule</th>
-              <th className="px-4 py-3">Sensitive Source</th>
-              <th className="px-4 py-3">Agent & Toolchain</th>
-              <th className="px-4 py-3">Egress Sink</th>
-              <th className="px-5 py-3 text-right">Actions</th>
+              <th className="px-4 py-2.5">Status / Severity</th>
+              <th className="px-4 py-2.5">Policy & ID</th>
+              <th className="px-4 py-2.5">Sensitive Source</th>
+              <th className="px-4 py-2.5">Agent Pipeline</th>
+              <th className="px-4 py-2.5">Egress Sink</th>
+              <th className="px-4 py-2.5 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border">
+          <tbody className="divide-y divide-hairline">
             {findings.map((f) => {
               const isSelected = f.id === selectedFindingId;
               return (
@@ -91,64 +128,62 @@ export const FindingsTable: React.FC<FindingsTableProps> = ({
                   key={f.id}
                   onClick={() => onSelectFinding(f)}
                   className={`cursor-pointer transition-colors ${
-                    isSelected ? 'bg-indigo-50/50 hover:bg-indigo-50' : 'hover:bg-slate-50/80'
+                    isSelected ? 'bg-surface-200' : 'hover:bg-surface-200/50'
                   }`}
                 >
-                  <td className="px-5 py-3.5 whitespace-nowrap">
-                    <div className="flex items-center gap-2">
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <div className="flex items-center gap-1.5">
                       {getStatusBadge(f.status)}
                       {getSeverityBadge(f.severity)}
                     </div>
                   </td>
-                  <td className="px-4 py-3.5">
-                    <div className="font-semibold text-ink text-xs">{f.policy_name}</div>
-                    <div className="text-[11px] font-mono text-slate-400">{f.policy_id}</div>
+                  <td className="px-4 py-3">
+                    <div className="font-medium text-ink">{f.policy_name}</div>
+                    <div className="text-[10px] font-mono text-ink-muted">{f.policy_id}</div>
                   </td>
-                  <td className="px-4 py-3.5">
-                    <div className="font-medium text-ink font-mono">{f.source_id}</div>
-                    <span className="text-[10px] uppercase font-bold text-risk-600">
+                  <td className="px-4 py-3">
+                    <div className="font-mono font-medium text-ink text-xs">{f.source_id}</div>
+                    <span className="text-[10px] font-mono uppercase text-signal-red font-semibold">
                       [{f.source_classification}]
                     </span>
                   </td>
-                  <td className="px-4 py-3.5">
-                    <div className="flex items-center gap-1.5 text-slate-600 font-mono text-[11px]">
-                      <span className="text-sky-700 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-100">
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-1.5 font-mono text-[11px] text-ink-secondary">
+                      <span className="text-signal-blue bg-signal-blue-subtle px-1.5 py-0.2 rounded-xs border border-signal-blue/20">
                         {f.read_tool}
                       </span>
-                      <ArrowRight size={11} className="text-slate-400" />
-                      <span className="text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100 font-bold">
+                      <ArrowRight size={10} className="text-ink-faint" />
+                      <span className="text-ink bg-surface-200 px-1.5 py-0.2 rounded-xs border border-hairline font-bold">
                         {f.agent_id}
                       </span>
-                      <ArrowRight size={11} className="text-slate-400" />
-                      <span className="text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100">
+                      <ArrowRight size={10} className="text-ink-faint" />
+                      <span className="text-signal-amber bg-signal-amber-subtle px-1.5 py-0.2 rounded-xs border border-signal-amber/20">
                         {f.send_tool}
                       </span>
                     </div>
                   </td>
-                  <td className="px-4 py-3.5">
-                    <div className="font-medium text-ink font-mono">{f.destination_id}</div>
-                    <span className="text-[10px] uppercase font-bold text-risk-600">
+                  <td className="px-4 py-3">
+                    <div className="font-mono font-medium text-ink text-xs">{f.destination_id}</div>
+                    <span className="text-[10px] font-mono uppercase text-signal-red font-semibold">
                       [{f.destination_trust}]
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-right whitespace-nowrap">
-                    <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                  <td className="px-4 py-3 text-right whitespace-nowrap">
+                    <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => onSelectFinding(f)}
-                        className="px-2.5 py-1 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md transition-colors flex items-center gap-1"
-                        title="Inspect step-by-step witness on graph"
+                        className="px-2 py-1 text-xs font-mono text-ink-secondary hover:text-ink bg-surface-200 hover:bg-surface-300 border border-hairline rounded-xs transition-colors flex items-center gap-1"
                       >
-                        <Eye size={12} />
+                        <Eye size={11} />
                         <span>Witness</span>
                       </button>
 
                       {f.status === 'new' && (
                         <button
                           onClick={() => onSimulateFix(f)}
-                          className="px-2.5 py-1 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors flex items-center gap-1 shadow-xs"
-                          title="Simulate breaking this path in temporary graph"
+                          className="px-2.5 py-1 text-xs font-mono font-medium text-white bg-linear hover:bg-linear-hover rounded-xs transition-colors flex items-center gap-1 shadow-subtle"
                         >
-                          <Wrench size={12} />
+                          <Wrench size={11} />
                           <span>Simulate Fix</span>
                         </button>
                       )}

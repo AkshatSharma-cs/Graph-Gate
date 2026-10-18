@@ -1,6 +1,6 @@
 import React from 'react';
 import { CIStatus, ScanSummary } from '../types';
-import { ShieldAlert, ShieldCheck, AlertTriangle, CheckCircle2, ArrowRight } from 'lucide-react';
+import { ShieldAlert, ShieldCheck, AlertTriangle } from 'lucide-react';
 
 interface KPICardsProps {
   summary: ScanSummary;
@@ -8,140 +8,158 @@ interface KPICardsProps {
 }
 
 export const KPICards: React.FC<KPICardsProps> = ({ summary, ciStatus }) => {
-  const getBannerInfo = () => {
+  const getGateBadge = () => {
     switch (ciStatus) {
       case 'fail':
-        return {
-          bg: 'bg-risk-50 border-risk-200 text-risk-900',
-          badgeBg: 'bg-risk-600 text-white',
-          icon: <ShieldAlert className="text-risk-600" size={20} />,
-          title: 'CI Gate Status: FAIL (Blocked)',
-          desc: `${summary.new_violations_count} newly reachable sensitive data flow(s) detected in candidate pull request. Merge is blocked.`,
-        };
+        return (
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-signal-red animate-pulse" />
+            <span className="text-xs font-mono font-bold tracking-wider uppercase text-signal-red">
+              CI GATE: BLOCKED (FAIL)
+            </span>
+          </div>
+        );
       case 'warn':
-        return {
-          bg: 'bg-warning-50 border-warning-200 text-warning-900',
-          badgeBg: 'bg-warning-600 text-white',
-          icon: <AlertTriangle className="text-warning-600" size={20} />,
-          title: 'CI Gate Status: WARN (Manual Review Required)',
-          desc: `${summary.needs_review_count} boundary finding(s) with unclassified data or unverified destination trust.`,
-        };
+        return (
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-signal-amber" />
+            <span className="text-xs font-mono font-bold tracking-wider uppercase text-signal-amber">
+              CI GATE: REVIEW REQUIRED (WARN)
+            </span>
+          </div>
+        );
       case 'pass':
       default:
-        return {
-          bg: 'bg-success-50 border-success-200 text-success-900',
-          badgeBg: 'bg-success-600 text-white',
-          icon: <ShieldCheck className="text-success-600" size={20} />,
-          title: 'CI Gate Status: PASS (Approved)',
-          desc: 'Zero newly reachable sensitive flows introduced. Candidate capability additions conform to all active policies.',
-        };
+        return (
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-signal-green" />
+            <span className="text-xs font-mono font-bold tracking-wider uppercase text-signal-green">
+              CI GATE: PASSED (APPROVED)
+            </span>
+          </div>
+        );
     }
   };
 
-  const banner = getBannerInfo();
+  const getGateMessage = () => {
+    switch (ciStatus) {
+      case 'fail':
+        return `${summary.new_violations_count} newly reachable data flow path violates declared egress security policies. Merge is prevented.`;
+      case 'warn':
+        return `${summary.needs_review_count} boundary finding(s) with unclassified resources or unverified destination trust levels.`;
+      case 'pass':
+      default:
+        return `Zero newly reachable sensitive flows introduced. Candidate capability changes strictly conform to all active policies.`;
+    }
+  };
 
   return (
-    <div className="space-y-4">
-      {/* CI Gate Banner */}
-      <div className={`p-4 rounded-xl border flex items-center justify-between shadow-sm transition-all ${banner.bg}`}>
-        <div className="flex items-center gap-3.5">
-          <div className="p-2 bg-white rounded-lg shadow-xs">{banner.icon}</div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-sm text-ink">{banner.title}</span>
-              <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${banner.badgeBg}`}>
-                {ciStatus.toUpperCase()}
-              </span>
-            </div>
-            <p className="text-xs text-slate-600 mt-0.5">{banner.desc}</p>
-          </div>
+    <div className="bg-surface-100 border border-hairline rounded overflow-hidden shadow-subtle">
+      {/* Top Telemetry Header */}
+      <div className="px-5 py-3.5 border-b border-hairline flex flex-col md:flex-row md:items-center justify-between gap-3 bg-surface-50">
+        <div className="flex items-start md:items-center gap-3">
+          <div className="mt-0.5 md:mt-0">{getGateBadge()}</div>
+          <span className="hidden md:inline text-hairline-strong">|</span>
+          <p className="text-xs text-ink-secondary leading-snug">{getGateMessage()}</p>
         </div>
 
-        <div className="hidden md:flex items-center gap-4 text-xs font-mono text-slate-500 border-l border-border pl-4">
+        <div className="flex items-center gap-4 text-xs font-mono text-ink-muted self-end md:self-auto shrink-0">
           <div>
-            <div className="text-[10px] uppercase text-slate-400 font-sans font-semibold">Graph Traversal</div>
-            <div className="font-semibold text-ink">
-              {summary.is_truncated ? 'Truncated at limit' : '100% Complete'}
-            </div>
+            <span className="text-ink-faint">TRAVERSAL: </span>
+            <span className="text-ink font-semibold">
+              {summary.is_truncated ? 'TRUNCATED (LIMIT)' : 'EXHAUSTIVE (100%)'}
+            </span>
+          </div>
+          <div>
+            <span className="text-ink-faint">PATHS: </span>
+            <span className="text-ink font-semibold">{summary.total_candidate_violations} VIOLATION(S)</span>
           </div>
         </div>
       </div>
 
-      {/* 4 KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* 4 Metric Columns with vertical hairline dividers */}
+      <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-hairline bg-surface-100">
         {/* 1. New Violations */}
-        <div className="bg-white p-4 rounded-xl border border-border shadow-xs hover:border-slate-300 transition-all">
-          <div className="flex items-center justify-between text-slate-500 mb-1.5">
-            <span className="text-xs font-medium">New Violations</span>
-            <span className={`p-1 rounded ${summary.new_violations_count > 0 ? 'bg-risk-50 text-risk-600' : 'bg-slate-50 text-slate-400'}`}>
-              <ShieldAlert size={14} />
-            </span>
+        <div className="p-4 hover:bg-surface-200/50 transition-colors">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[11px] font-mono uppercase text-ink-muted">New Violations</span>
+            {summary.new_violations_count > 0 && (
+              <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-red-subtle text-signal-red border border-signal-red/20">
+                BLOCKING
+              </span>
+            )}
           </div>
           <div className="flex items-baseline gap-2">
-            <span className={`text-2xl font-bold ${summary.new_violations_count > 0 ? 'text-risk-600' : 'text-ink'}`}>
+            <span className={`text-2xl font-mono font-bold tracking-tight ${
+              summary.new_violations_count > 0 ? 'text-signal-red' : 'text-ink'
+            }`}>
               {summary.new_violations_count}
             </span>
-            <span className="text-[11px] text-slate-400 font-medium">candidate - baseline</span>
+            <span className="text-[11px] font-mono text-ink-faint">Δ (cand - base)</span>
           </div>
-          <div className="mt-2 text-[11px] text-slate-500">
-            {summary.new_violations_count > 0 ? (
-              <span className="text-risk-600 font-medium">Blocking PR merge</span>
-            ) : (
-              <span className="text-success-600 font-medium">No new risks introduced</span>
-            )}
+          <div className="mt-1 text-[11px] text-ink-muted truncate">
+            {summary.new_violations_count > 0 ? 'Introduced in candidate PR' : 'No new risky paths'}
           </div>
         </div>
 
         {/* 2. Pre-existing */}
-        <div className="bg-white p-4 rounded-xl border border-border shadow-xs hover:border-slate-300 transition-all">
-          <div className="flex items-center justify-between text-slate-500 mb-1.5">
-            <span className="text-xs font-medium">Pre-existing</span>
-            <span className="p-1 rounded bg-slate-50 text-slate-500">
-              <AlertTriangle size={14} />
-            </span>
+        <div className="p-4 hover:bg-surface-200/50 transition-colors">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[11px] font-mono uppercase text-ink-muted">Pre-Existing</span>
+            <span className="text-[9px] font-mono text-ink-faint">UNCHANGED</span>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-ink">{summary.pre_existing_count}</span>
-            <span className="text-[11px] text-slate-400 font-medium">baseline ∩ candidate</span>
+            <span className="text-2xl font-mono font-bold text-ink tracking-tight">
+              {summary.pre_existing_count}
+            </span>
+            <span className="text-[11px] font-mono text-ink-faint">∩ (base ∩ cand)</span>
           </div>
-          <div className="mt-2 text-[11px] text-slate-500">
-            <span>Prior technical debt</span>
+          <div className="mt-1 text-[11px] text-ink-muted truncate">
+            Prior technical debt in main
           </div>
         </div>
 
         {/* 3. Resolved */}
-        <div className="bg-white p-4 rounded-xl border border-border shadow-xs hover:border-slate-300 transition-all">
-          <div className="flex items-center justify-between text-slate-500 mb-1.5">
-            <span className="text-xs font-medium">Resolved Paths</span>
-            <span className="p-1 rounded bg-success-50 text-success-600">
-              <CheckCircle2 size={14} />
-            </span>
+        <div className="p-4 hover:bg-surface-200/50 transition-colors">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[11px] font-mono uppercase text-ink-muted">Resolved Paths</span>
+            {summary.resolved_count > 0 && (
+              <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-green-subtle text-signal-green border border-signal-green/20">
+                FIXED
+              </span>
+            )}
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-success-600">{summary.resolved_count}</span>
-            <span className="text-[11px] text-slate-400 font-medium">baseline - candidate</span>
+            <span className="text-2xl font-mono font-bold text-signal-green tracking-tight">
+              {summary.resolved_count}
+            </span>
+            <span className="text-[11px] font-mono text-ink-faint">Δ (base - cand)</span>
           </div>
-          <div className="mt-2 text-[11px] text-slate-500">
-            <span className="text-success-600 font-medium">Paths safely eliminated</span>
+          <div className="mt-1 text-[11px] text-ink-muted truncate">
+            Risks severed by change
           </div>
         </div>
 
         {/* 4. Needs Review */}
-        <div className="bg-white p-4 rounded-xl border border-border shadow-xs hover:border-slate-300 transition-all">
-          <div className="flex items-center justify-between text-slate-500 mb-1.5">
-            <span className="text-xs font-medium">Needs Review</span>
-            <span className={`p-1 rounded ${summary.needs_review_count > 0 ? 'bg-amber-50 text-amber-600' : 'bg-slate-50 text-slate-400'}`}>
-              <AlertTriangle size={14} />
-            </span>
+        <div className="p-4 hover:bg-surface-200/50 transition-colors">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[11px] font-mono uppercase text-ink-muted">Needs Review</span>
+            {summary.needs_review_count > 0 && (
+              <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-amber-subtle text-signal-amber border border-signal-amber/20">
+                AUDIT
+              </span>
+            )}
           </div>
           <div className="flex items-baseline gap-2">
-            <span className={`text-2xl font-bold ${summary.needs_review_count > 0 ? 'text-amber-600' : 'text-ink'}`}>
+            <span className={`text-2xl font-mono font-bold tracking-tight ${
+              summary.needs_review_count > 0 ? 'text-signal-amber' : 'text-ink'
+            }`}>
               {summary.needs_review_count}
             </span>
-            <span className="text-[11px] text-slate-400 font-medium">unclassified boundaries</span>
+            <span className="text-[11px] font-mono text-ink-faint">unclassified</span>
           </div>
-          <div className="mt-2 text-[11px] text-slate-500">
-            <span>Audit boundary declarations</span>
+          <div className="mt-1 text-[11px] text-ink-muted truncate">
+            Requires boundary clarification
           </div>
         </div>
       </div>

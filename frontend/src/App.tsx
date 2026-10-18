@@ -24,7 +24,7 @@ export function App() {
   const [scenarios, setScenarios] = useState<DemoScenario[]>([]);
   const [activeScenarioId, setActiveScenarioId] = useState<string>('scenario-risky');
   const [engineStatus, setEngineStatus] = useState<EngineStatus | null>(null);
-  
+
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [selectedFinding, setSelectedFinding] = useState<PathFinding | null>(null);
   const [isSimulateModalOpen, setIsSimulateModalOpen] = useState(false);
@@ -110,8 +110,8 @@ export function App() {
   const activeScenario = scenarios.find(s => s.id === activeScenarioId);
 
   return (
-    <div className="flex h-screen bg-canvas overflow-hidden">
-      {/* Dark slate sidebar */}
+    <div className="flex h-screen bg-ground text-ink overflow-hidden selection:bg-linear/30 select-none">
+      {/* Precision Navigation Rail */}
       <Sidebar
         currentTab={currentTab}
         onTabChange={setCurrentTab}
@@ -119,9 +119,9 @@ export function App() {
         violationsCount={analysis?.summary.new_violations_count ?? 0}
       />
 
-      {/* Main Canvas Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Top Navigation */}
+      {/* Main Workbench Area */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden select-text">
+        {/* Command Bar */}
         <TopNav
           scenarios={scenarios}
           activeScenarioId={activeScenarioId}
@@ -132,32 +132,32 @@ export function App() {
           scanId={analysis?.scan_id ?? ''}
         />
 
-        {/* Content Body */}
-        <main className="flex-1 overflow-y-auto p-6 space-y-6">
+        {/* Workbench Content */}
+        <main className="flex-1 overflow-y-auto p-4 space-y-4">
           {error && (
-            <div className="p-4 bg-risk-50 border border-risk-200 text-risk-800 rounded-xl text-xs flex items-center gap-2">
-              <AlertCircle size={16} />
+            <div className="p-3 bg-signal-red-subtle border border-signal-red/30 text-signal-red rounded-xs font-mono text-xs flex items-center gap-2">
+              <AlertCircle size={15} />
               <span>{error}</span>
             </div>
           )}
 
           {isLoading && !analysis ? (
-            <div className="flex flex-col items-center justify-center h-96 text-slate-400 space-y-3">
-              <RefreshCw size={28} className="animate-spin text-indigo-600" />
-              <div className="text-xs font-medium">Running graph reachability & policy evaluation...</div>
+            <div className="flex flex-col items-center justify-center h-96 text-ink-muted space-y-2">
+              <RefreshCw size={24} className="animate-spin text-linear" />
+              <div className="text-xs font-mono">TRAVERSING FALKORDB DATA-FLOW PATHS...</div>
             </div>
           ) : analysis ? (
             <>
               {/* Tab: Overview */}
               {currentTab === 'overview' && (
-                <div className="space-y-6">
-                  {/* KPI cards & CI banner */}
+                <div className="space-y-4">
+                  {/* Integrated Telemetry Strip */}
                   <KPICards
                     summary={analysis.summary}
                     ciStatus={analysis.ci_status}
                   />
 
-                  {/* Interactive Graph Canvas */}
+                  {/* Dark Workbench Graph Canvas */}
                   <GraphExplorer
                     graphData={analysis.candidate_graph}
                     highlightedNodeIds={selectedFinding?.path_node_ids ?? []}
@@ -165,7 +165,7 @@ export function App() {
                     title="Candidate Graph — Selected Risk Path Highlighted"
                   />
 
-                  {/* Violations Table */}
+                  {/* Security Audit Table */}
                   <FindingsTable
                     findings={analysis.findings}
                     selectedFindingId={selectedFinding?.id}
@@ -185,12 +185,14 @@ export function App() {
 
               {/* Tab: Graph Explorer Fullscreen */}
               {currentTab === 'graph' && (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-sm font-bold text-ink">Multi-Hop Reachability Graph</h2>
-                      <p className="text-xs text-slate-500">
-                        Interactive FalkorDB graph representation showing tools, identities, resources, and sinks
+                      <h2 className="font-mono text-xs font-bold text-ink uppercase tracking-wider">
+                        Topology Workbench
+                      </h2>
+                      <p className="text-xs text-ink-muted">
+                        Interactive graph model representing tools, contexts, identities, and egress sinks
                       </p>
                     </div>
                   </div>
@@ -198,7 +200,7 @@ export function App() {
                     graphData={analysis.candidate_graph}
                     highlightedNodeIds={selectedFinding?.path_node_ids ?? []}
                     highlightedEdgeIds={selectedFinding?.path_edge_ids ?? []}
-                    title="Candidate Capability Graph"
+                    title="Candidate Topology"
                   />
                 </div>
               )}
@@ -232,7 +234,7 @@ export function App() {
         onSimulateFix={handleOpenSimulateFix}
       />
 
-      {/* Counterfactual Remediation Modal */}
+      {/* Counterfactual Remediation Simulator */}
       {activeScenario && (
         <SimulateFixModal
           scanId={analysis?.scan_id ?? ''}

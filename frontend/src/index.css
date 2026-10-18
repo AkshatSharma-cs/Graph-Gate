@@ -4,42 +4,99 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: #111827;
-    background-color: #F8FAFC;
+  :root {
+    color-scheme: dark;
   }
-  code, pre {
-    font-family: 'JetBrains Mono', monospace;
+
+  body {
+    background-color: #08090A;
+    color: #F3F4F6;
+    letter-spacing: -0.011em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -0.025em;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    letter-spacing: -0.01em;
   }
 }
 
-/* Custom subtle scrollbar */
+/* Custom precision hairline scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: rgba(255, 255, 255, 0.22);
 }
 
-/* Pulse animation for risky edges */
-@keyframes dash-pulse {
+/* Laser-etched animated glowing path for risky edges */
+@keyframes flow-trace {
+  from {
+    stroke-dashoffset: 24;
+  }
   to {
-    stroke-dashoffset: -20;
+    stroke-dashoffset: 0;
   }
 }
 
 .risky-edge-path {
-  stroke: #DC2626 !important;
-  stroke-width: 2.5px !important;
-  stroke-dasharray: 6 3 !important;
-  animation: dash-pulse 1s linear infinite !important;
+  stroke: #EF4444 !important;
+  stroke-width: 2.2px !important;
+  stroke-dasharray: 6 4 !important;
+  animation: flow-trace 0.8s linear infinite !important;
+  filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.55));
+}
+
+.safe-edge-path {
+  stroke: rgba(255, 255, 255, 0.16) !important;
+  stroke-width: 1.2px !important;
+}
+
+/* React Flow custom dark canvas styling */
+.react-flow__renderer {
+  background-color: #08090A !important;
+}
+
+.react-flow__controls {
+  background-color: #141518 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.react-flow__controls-button {
+  background-color: #141518 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  fill: #9CA3AF !important;
+  color: #9CA3AF !important;
+}
+
+.react-flow__controls-button:hover {
+  background-color: #1E2026 !important;
+  fill: #F3F4F6 !important;
+}
+
+.react-flow__minimap {
+  background-color: #101114 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px !important;
+}
+
+.react-flow__handle {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 2px !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
 }

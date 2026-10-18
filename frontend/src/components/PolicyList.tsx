@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, ShieldAlert, AlertTriangle, FileCode } from 'lucide-react';
+import { Scale, Check, AlertOctagon, ShieldAlert } from 'lucide-react';
 
 export const PolicyList: React.FC = () => {
   const policies = [
@@ -9,7 +9,7 @@ export const PolicyList: React.FC = () => {
       severity: "critical",
       scope: "DataClass: restricted -> Destination: external | untrusted",
       action: "BLOCK (Fail CI)",
-      description: "Restricted data (e.g. payroll records, PII, cryptographic keys) must never have any reachable graph data flow to external or untrusted destination sinks.",
+      description: "Restricted classification data (e.g. payroll datasets, cryptographic keys, customer PII) must never have any reachable graph data flow to external or untrusted destination sinks.",
       compliance: "SOC2 CC6.1, GDPR Art. 32, NIST SP 800-53 AC-4"
     },
     {
@@ -18,7 +18,7 @@ export const PolicyList: React.FC = () => {
       severity: "high",
       scope: "DataClass: confidential -> Destination: external | untrusted",
       action: "BLOCK unless Explicit Exemption Registered",
-      description: "Confidential business records may only flow to approved destinations with registered authorization records.",
+      description: "Confidential organizational documents may only flow to approved destinations with registered authorization records.",
       compliance: "ISO 27001 A.8.2, SOC2 CC6.3"
     },
     {
@@ -27,16 +27,16 @@ export const PolicyList: React.FC = () => {
       severity: "medium",
       action: "WARN (Review Needed)",
       scope: "DataClass: unknown | Destination: unknown",
-      description: "Agents and tools connected to unclassified resources or unverified destination trust levels cannot be statically proven safe.",
+      description: "Agents and tools connected to unclassified resources or unverified destination trust levels cannot be proven safe statically.",
       compliance: "Security Architecture Baseline Requirement"
     },
     {
       id: "POL-004",
       name: "External Egress Notice",
       severity: "info",
-      action: "PASS (Audit Log)",
+      action: "PASS (Audit Logged)",
       scope: "DataClass: public | internal -> Destination: external",
-      description: "Public or internal data flowing to external sinks is audited and flagged for informational awareness.",
+      description: "Internal or public operational data flowing to external destinations is audited for visibility.",
       compliance: "Egress Monitoring Baseline"
     },
     {
@@ -52,53 +52,70 @@ export const PolicyList: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      <div className="bg-white p-5 rounded-xl border border-border shadow-xs">
-        <h3 className="font-bold text-sm text-ink mb-1">Deterministic Policy Registry</h3>
-        <p className="text-xs text-slate-500">
-          Deterministic compliance rules evaluated against multi-hop FalkorDB graph reachability paths. No non-deterministic LLM judgements in CI gating.
-        </p>
+      {/* Header */}
+      <div className="bg-surface-100 p-4 rounded border border-hairline shadow-subtle flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <span className="p-1.5 bg-surface-200 text-linear rounded-xs border border-hairline">
+            <Scale size={15} />
+          </span>
+          <div>
+            <h3 className="font-mono text-xs font-bold text-ink uppercase tracking-wider">
+              Deterministic Policy Matrix
+            </h3>
+            <p className="text-xs text-ink-muted mt-0.5">
+              Deterministic compliance rules evaluated against FalkorDB reachability paths
+            </p>
+          </div>
+        </div>
+        <span className="text-[11px] font-mono px-2 py-0.5 bg-surface-50 text-ink-secondary border border-hairline rounded-xs">
+          5 ACTIVE RULES
+        </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-4">
+      {/* Rules list */}
+      <div className="space-y-2">
         {policies.map((p) => (
-          <div key={p.id} className="bg-white p-5 rounded-xl border border-border shadow-xs space-y-3">
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-3">
-                <span className={`text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full ${
+          <div key={p.id} className="bg-surface-100 p-4 rounded border border-hairline shadow-subtle space-y-2">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <span className={`text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs ${
                   p.severity === 'critical'
-                    ? 'bg-risk-600 text-white'
+                    ? 'bg-signal-red-subtle text-signal-red border border-signal-red/30'
                     : p.severity === 'high'
-                    ? 'bg-amber-600 text-white'
+                    ? 'bg-signal-amber-subtle text-signal-amber border border-signal-amber/30'
                     : p.severity === 'medium'
-                    ? 'bg-yellow-500 text-white'
-                    : 'bg-slate-200 text-slate-700'
+                    ? 'bg-signal-amber-subtle text-signal-amber border border-signal-amber/20'
+                    : 'bg-surface-200 text-ink-muted border border-hairline'
                 }`}>
                   {p.severity.toUpperCase()}
                 </span>
                 <div>
-                  <h4 className="font-bold text-xs text-ink">{p.name}</h4>
-                  <span className="font-mono text-[11px] text-slate-400">{p.id}</span>
+                  <h4 className="font-sans font-semibold text-xs text-ink">{p.name}</h4>
+                  <span className="font-mono text-[10px] text-ink-muted">{p.id}</span>
                 </div>
               </div>
 
-              <span className={`text-xs font-semibold px-2.5 py-1 rounded-md font-mono ${
+              <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-xs ${
                 p.action.includes('BLOCK')
-                  ? 'bg-risk-50 text-risk-700 border border-risk-200'
+                  ? 'bg-signal-red-subtle text-signal-red border border-signal-red/30'
                   : p.action.includes('WARN')
-                  ? 'bg-warning-50 text-warning-800 border border-warning-200'
-                  : 'bg-success-50 text-success-700 border border-success-200'
+                  ? 'bg-signal-amber-subtle text-signal-amber border border-signal-amber/30'
+                  : 'bg-signal-green-subtle text-signal-green border border-signal-green/30'
               }`}>
                 {p.action}
               </span>
             </div>
 
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-xs text-ink-secondary leading-relaxed font-sans">
               {p.description}
             </p>
 
-            <div className="flex items-center justify-between pt-2 border-t border-border text-[11px] font-mono text-slate-500">
-              <div>Scope: <span className="text-indigo-600">{p.scope}</span></div>
-              <div className="text-slate-400">{p.compliance}</div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-2 border-t border-hairline text-[11px] font-mono gap-1 text-ink-muted">
+              <div>
+                <span className="text-ink-faint">SCOPE: </span>
+                <span className="text-linear">{p.scope}</span>
+              </div>
+              <div className="text-ink-faint">{p.compliance}</div>
             </div>
           </div>
         ))}

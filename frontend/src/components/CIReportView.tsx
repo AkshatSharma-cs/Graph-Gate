@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AnalysisResult } from '../types';
 import { fetchScanSarif } from '../api/client';
-import { FileText, Download, Copy, Check, Terminal, Shield } from 'lucide-react';
+import { Download, Copy, Check, FileText, Code2 } from 'lucide-react';
 
 interface CIReportViewProps {
   analysis: AnalysisResult;
@@ -45,68 +45,70 @@ export const CIReportView: React.FC<CIReportViewProps> = ({ analysis }) => {
   return (
     <div className="space-y-4">
       {/* Tab Switcher & Actions */}
-      <div className="flex items-center justify-between bg-white p-3.5 rounded-xl border border-border shadow-xs">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between bg-surface-100 p-2.5 rounded border border-hairline shadow-subtle select-none">
+        <div className="flex items-center gap-1.5 font-mono text-xs">
           <button
             onClick={() => setActiveTab('markdown')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            className={`px-3 py-1.5 rounded-xs transition-colors flex items-center gap-2 ${
               activeTab === 'markdown'
-                ? 'bg-indigo-600 text-white shadow-xs'
-                : 'text-slate-600 hover:text-ink hover:bg-slate-100'
+                ? 'bg-surface-200 text-ink font-semibold border border-hairline'
+                : 'text-ink-muted hover:text-ink hover:bg-surface-200/50'
             }`}
           >
-            Pull Request Markdown Summary
+            <FileText size={12} className={activeTab === 'markdown' ? 'text-linear' : ''} />
+            <span>PR Markdown Review Comment</span>
           </button>
           <button
             onClick={() => {
               setActiveTab('sarif');
               handleLoadSarif();
             }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            className={`px-3 py-1.5 rounded-xs transition-colors flex items-center gap-2 ${
               activeTab === 'sarif'
-                ? 'bg-indigo-600 text-white shadow-xs'
-                : 'text-slate-600 hover:text-ink hover:bg-slate-100'
+                ? 'bg-surface-200 text-ink font-semibold border border-hairline'
+                : 'text-ink-muted hover:text-ink hover:bg-surface-200/50'
             }`}
           >
-            SARIF 2.1.0 (GitHub Code Scanning)
+            <Code2 size={12} className={activeTab === 'sarif' ? 'text-linear' : ''} />
+            <span>SARIF 2.1.0 (GitHub Code Scanning)</span>
           </button>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div>
           {activeTab === 'markdown' ? (
             <button
               onClick={handleCopyMarkdown}
-              className="px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg flex items-center gap-1.5 transition-colors"
+              className="px-2.5 py-1 text-xs font-mono text-ink bg-surface-200 hover:bg-surface-300 border border-hairline rounded-xs flex items-center gap-1.5 transition-colors shadow-subtle"
             >
-              {copied ? <Check size={13} className="text-success-600" /> : <Copy size={13} />}
-              <span>{copied ? 'Copied to Clipboard!' : 'Copy Markdown'}</span>
+              {copied ? <Check size={12} className="text-signal-green" /> : <Copy size={12} />}
+              <span>{copied ? 'COPIED' : 'COPY MARKDOWN'}</span>
             </button>
           ) : (
             <button
               onClick={handleDownloadSarif}
               disabled={!sarifData}
-              className="px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50"
+              className="px-2.5 py-1 text-xs font-mono font-medium text-white bg-linear hover:bg-linear-hover rounded-xs flex items-center gap-1.5 transition-colors disabled:opacity-50 shadow-subtle"
             >
-              <Download size={13} />
-              <span>Download .sarif</span>
+              <Download size={12} />
+              <span>DOWNLOAD .SARIF</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Content panel */}
+      {/* Output Viewer */}
       {activeTab === 'markdown' ? (
-        <div className="bg-white p-6 rounded-xl border border-border shadow-xs">
-          <pre className="text-xs font-mono text-slate-800 whitespace-pre-wrap leading-relaxed overflow-x-auto bg-slate-50 p-5 rounded-lg border border-border">
+        <div className="bg-surface-100 rounded border border-hairline shadow-subtle overflow-hidden">
+          <pre className="text-xs font-mono text-ink-secondary whitespace-pre-wrap leading-relaxed overflow-x-auto p-5 bg-ground border-b border-hairline max-h-[550px]">
             {analysis.markdown_report}
           </pre>
         </div>
       ) : (
-        <div className="bg-white p-6 rounded-xl border border-border shadow-xs">
+        <div className="bg-surface-100 rounded border border-hairline shadow-subtle overflow-hidden">
           {loadingSarif ? (
-            <div className="text-center py-10 text-xs text-slate-500">Loading SARIF document...</div>
+            <div className="text-center py-12 text-xs font-mono text-ink-muted">Generating SARIF 2.1.0 payload...</div>
           ) : (
-            <pre className="text-xs font-mono text-slate-800 whitespace-pre-wrap leading-relaxed overflow-x-auto bg-slate-900 text-slate-100 p-5 rounded-lg max-h-[550px]">
+            <pre className="text-xs font-mono text-ink-secondary whitespace-pre-wrap leading-relaxed overflow-x-auto p-5 bg-ground max-h-[550px]">
               {sarifData}
             </pre>
           )}
