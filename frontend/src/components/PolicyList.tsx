@@ -53,69 +53,73 @@ export const PolicyList: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="bg-surface-100 p-4 rounded border border-hairline shadow-subtle flex items-center justify-between">
+      <div className="bg-white p-4 rounded-md border border-[#DFE5E1] shadow-xs flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <span className="p-1.5 bg-surface-200 text-linear rounded-xs border border-hairline">
-            <Scale size={15} />
+          <span className="p-1.5 bg-teal-50 text-[#286A61] rounded border border-teal-200">
+            <Scale size={16} />
           </span>
           <div>
-            <h3 className="font-mono text-xs font-bold text-ink uppercase tracking-wider">
+            <h3 className="font-mono text-xs font-semibold text-[#17211F] uppercase tracking-wider">
               Deterministic Policy Matrix
             </h3>
-            <p className="text-xs text-ink-muted mt-0.5">
+            <p className="text-xs text-[#64716C] mt-0.5">
               Deterministic compliance rules evaluated against FalkorDB reachability paths
             </p>
           </div>
         </div>
-        <span className="text-[11px] font-mono px-2 py-0.5 bg-surface-50 text-ink-secondary border border-hairline rounded-xs">
+        <span className="text-xs font-mono px-2.5 py-0.5 bg-[#F5F6F4] text-[#64716C] border border-[#DFE5E1] rounded">
           5 ACTIVE RULES
         </span>
       </div>
 
       {/* Rules list */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         {policies.map((p) => (
-          <div key={p.id} className="bg-surface-100 p-4 rounded border border-hairline shadow-subtle space-y-2">
+          <div key={p.id} className="bg-white p-5 rounded-md border border-[#DFE5E1] shadow-xs space-y-3">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-2.5">
-                <span className={`text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs ${
-                  p.severity === 'critical'
-                    ? 'bg-signal-red-subtle text-signal-red border border-signal-red/30'
-                    : p.severity === 'high'
-                    ? 'bg-signal-amber-subtle text-signal-amber border border-signal-amber/30'
-                    : p.severity === 'medium'
-                    ? 'bg-signal-amber-subtle text-signal-amber border border-signal-amber/20'
-                    : 'bg-surface-200 text-ink-muted border border-hairline'
-                }`}>
+                <span
+                  className={`text-[11px] font-mono font-semibold uppercase px-2 py-0.5 rounded ${
+                    p.severity === 'critical'
+                      ? 'bg-red-50 text-[#B42318] border border-red-200'
+                      : p.severity === 'high'
+                      ? 'bg-amber-50 text-[#A15C07] border border-amber-200'
+                      : p.severity === 'medium'
+                      ? 'bg-amber-50 text-[#A15C07] border border-amber-200'
+                      : 'bg-slate-50 text-[#64716C] border border-slate-200'
+                  }`}
+                >
                   {p.severity.toUpperCase()}
                 </span>
                 <div>
-                  <h4 className="font-sans font-semibold text-xs text-ink">{p.name}</h4>
-                  <span className="font-mono text-[10px] text-ink-muted">{p.id}</span>
+                  <h4 className="font-semibold text-xs text-[#17211F]">{p.name}</h4>
+                  <span className="font-mono text-xs text-[#64716C]">{p.id}</span>
                 </div>
               </div>
 
-              <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-xs ${
-                p.action.includes('BLOCK')
-                  ? 'bg-signal-red-subtle text-signal-red border border-signal-red/30'
-                  : p.action.includes('WARN')
-                  ? 'bg-signal-amber-subtle text-signal-amber border border-signal-amber/30'
-                  : 'bg-signal-green-subtle text-signal-green border border-signal-green/30'
-              }`}>
+              <span
+                className={`text-xs font-mono font-medium px-2.5 py-0.5 rounded ${
+                  p.action.includes('BLOCK')
+                    ? 'bg-red-50 text-[#B42318] border border-red-200'
+                    : p.action.includes('WARN')
+                    ? 'bg-amber-50 text-[#A15C07] border border-amber-200'
+                    : 'bg-emerald-50 text-[#16794B] border border-emerald-200'
+                }`}
+              >
                 {p.action}
               </span>
             </div>
 
-            <p className="text-xs text-ink-secondary leading-relaxed font-sans">
+            <p className="text-xs text-[#17211F] leading-relaxed">
               {p.description}
             </p>
 
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-2 border-t border-hairline text-[11px] font-mono gap-1 text-ink-muted">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-2.5 border-t border-[#DFE5E1] text-xs font-mono gap-1 text-[#64716C]">
               <div>
-                <span className="text-ink-faint">SCOPE: </span>
-                <span className="text-linear">{p.scope}</span>
+                <span className="text-[#64716C]">SCOPE: </span>
+                <span className="text-[#286A61] font-semibold">{p.scope}</span>
               </div>
-              <div className="text-ink-faint">{p.compliance}</div>
+              <div className="text-[#64716C]">{p.compliance}</div>
             </div>
           </div>
         ))}

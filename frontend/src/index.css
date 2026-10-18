@@ -4,99 +4,96 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    color-scheme: dark;
-  }
-
   body {
-    background-color: #08090A;
-    color: #F3F4F6;
-    letter-spacing: -0.011em;
+    background-color: #F5F6F4;
+    color: #17211F;
+    font-size: 14px;
+    line-height: 1.5;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
-    letter-spacing: -0.025em;
+  h1, h2, h3, h4 {
+    color: #17211F;
+    font-weight: 600;
   }
 
   code, pre, .font-mono {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    letter-spacing: -0.01em;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+    font-feature-settings: "liga" 0;
   }
 }
 
-/* Custom precision hairline scrollbar */
+/* Restrained scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 2px;
+  background: #DFE5E1;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.22);
+  background: #C5CFC9;
 }
 
-/* Laser-etched animated glowing path for risky edges */
-@keyframes flow-trace {
-  from {
-    stroke-dashoffset: 24;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-.risky-edge-path {
-  stroke: #EF4444 !important;
-  stroke-width: 2.2px !important;
-  stroke-dasharray: 6 4 !important;
-  animation: flow-trace 0.8s linear infinite !important;
-  filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.55));
-}
-
-.safe-edge-path {
-  stroke: rgba(255, 255, 255, 0.16) !important;
-  stroke-width: 1.2px !important;
-}
-
-/* React Flow custom dark canvas styling */
+/* React Flow light workbench overrides */
 .react-flow__renderer {
-  background-color: #08090A !important;
+  background-color: #F5F6F4 !important;
 }
 
 .react-flow__controls {
-  background-color: #141518 !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #DFE5E1 !important;
   border-radius: 6px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 1px 4px rgba(23, 33, 31, 0.08) !important;
+  overflow: hidden;
 }
 
 .react-flow__controls-button {
-  background-color: #141518 !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-  fill: #9CA3AF !important;
-  color: #9CA3AF !important;
+  background-color: #FFFFFF !important;
+  border-bottom: 1px solid #EDF1EE !important;
+  fill: #64716C !important;
+  color: #64716C !important;
+  transition: all 0.15s ease;
 }
 
 .react-flow__controls-button:hover {
-  background-color: #1E2026 !important;
-  fill: #F3F4F6 !important;
+  background-color: #F0F2F0 !important;
+  fill: #17211F !important;
 }
 
 .react-flow__minimap {
-  background-color: #101114 !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 8px !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #DFE5E1 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 1px 4px rgba(23, 33, 31, 0.06) !important;
 }
 
 .react-flow__handle {
   width: 7px !important;
   height: 7px !important;
+  background-color: #FFFFFF !important;
+  border: 1.5px solid #9BA7A1 !important;
   border-radius: 2px !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Restrained, solid risk edge without continuous glowing noise */
+.risky-edge-path {
+  stroke: #B42318 !important;
+  stroke-width: 2.5px !important;
+}
+
+.safe-edge-path {
+  stroke: #9BA7A1 !important;
+  stroke-width: 1.5px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

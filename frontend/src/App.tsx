@@ -110,7 +110,7 @@ export function App() {
   const activeScenario = scenarios.find(s => s.id === activeScenarioId);
 
   return (
-    <div className="flex h-screen bg-ground text-ink overflow-hidden selection:bg-linear/30 select-none">
+    <div className="flex h-screen bg-[#F5F6F4] text-[#17211F] overflow-hidden selection:bg-[#286A61]/20 select-none font-sans">
       {/* Precision Navigation Rail */}
       <Sidebar
         currentTab={currentTab}
@@ -133,31 +133,33 @@ export function App() {
         />
 
         {/* Workbench Content */}
-        <main className="flex-1 overflow-y-auto p-4 space-y-4">
+        <main className="flex-1 overflow-y-auto p-6 space-y-6">
           {error && (
-            <div className="p-3 bg-signal-red-subtle border border-signal-red/30 text-signal-red rounded-xs font-mono text-xs flex items-center gap-2">
-              <AlertCircle size={15} />
+            <div className="p-3.5 bg-red-50 border border-red-200 text-[#B42318] rounded text-xs font-mono flex items-center gap-2">
+              <AlertCircle size={16} />
               <span>{error}</span>
             </div>
           )}
 
           {isLoading && !analysis ? (
-            <div className="flex flex-col items-center justify-center h-96 text-ink-muted space-y-2">
-              <RefreshCw size={24} className="animate-spin text-linear" />
-              <div className="text-xs font-mono">TRAVERSING FALKORDB DATA-FLOW PATHS...</div>
+            <div className="flex flex-col items-center justify-center h-96 text-[#64716C] space-y-3">
+              <RefreshCw size={26} className="animate-spin text-[#286A61]" />
+              <div className="text-xs font-mono font-medium tracking-wide">
+                TRAVERSING FALKORDB DATA-FLOW PATHS...
+              </div>
             </div>
           ) : analysis ? (
             <>
               {/* Tab: Overview */}
               {currentTab === 'overview' && (
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {/* Integrated Telemetry Strip */}
                   <KPICards
                     summary={analysis.summary}
                     ciStatus={analysis.ci_status}
                   />
 
-                  {/* Dark Workbench Graph Canvas */}
+                  {/* Clean Workbench Graph Canvas */}
                   <GraphExplorer
                     graphData={analysis.candidate_graph}
                     highlightedNodeIds={selectedFinding?.path_node_ids ?? []}
@@ -185,13 +187,13 @@ export function App() {
 
               {/* Tab: Graph Explorer Fullscreen */}
               {currentTab === 'graph' && (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="font-mono text-xs font-bold text-ink uppercase tracking-wider">
+                      <h2 className="font-mono text-xs font-semibold text-[#17211F] uppercase tracking-wider">
                         Topology Workbench
                       </h2>
-                      <p className="text-xs text-ink-muted">
+                      <p className="text-xs text-[#64716C] mt-0.5">
                         Interactive graph model representing tools, contexts, identities, and egress sinks
                       </p>
                     </div>

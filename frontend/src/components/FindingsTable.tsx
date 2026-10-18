@@ -19,25 +19,25 @@ export const FindingsTable: React.FC<FindingsTableProps> = ({
     switch (severity) {
       case 'critical':
         return (
-          <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-red-subtle text-signal-red border border-signal-red/30">
+          <span className="text-[11px] font-mono font-semibold uppercase px-2 py-0.5 rounded bg-red-50 text-[#B42318] border border-red-200">
             CRITICAL
           </span>
         );
       case 'high':
         return (
-          <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-amber-subtle text-signal-amber border border-signal-amber/30">
+          <span className="text-[11px] font-mono font-semibold uppercase px-2 py-0.5 rounded bg-amber-50 text-[#A15C07] border border-amber-200">
             HIGH
           </span>
         );
       case 'medium':
         return (
-          <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-amber-subtle text-signal-amber border border-signal-amber/20">
+          <span className="text-[11px] font-mono font-semibold uppercase px-2 py-0.5 rounded bg-amber-50 text-[#A15C07] border border-amber-200">
             MEDIUM
           </span>
         );
       default:
         return (
-          <span className="text-[10px] font-mono uppercase px-1.5 py-0.2 rounded-xs bg-surface-200 text-ink-muted border border-hairline">
+          <span className="text-[11px] font-mono uppercase px-2 py-0.5 rounded bg-slate-50 text-[#64716C] border border-slate-200">
             INFO
           </span>
         );
@@ -48,25 +48,25 @@ export const FindingsTable: React.FC<FindingsTableProps> = ({
     switch (status) {
       case 'new':
         return (
-          <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-red text-white">
+          <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-[#B42318] text-white">
             NEW
           </span>
         );
       case 'pre_existing':
         return (
-          <span className="text-[9px] font-mono font-medium uppercase px-1.5 py-0.2 rounded-xs bg-surface-200 text-ink-muted border border-hairline">
+          <span className="text-[10px] font-mono font-medium uppercase px-2 py-0.5 rounded bg-[#F5F6F4] text-[#64716C] border border-[#DFE5E1]">
             EXISTING
           </span>
         );
       case 'resolved':
         return (
-          <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-green text-white">
+          <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-[#16794B] text-white">
             RESOLVED
           </span>
         );
       case 'needs_review':
         return (
-          <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.2 rounded-xs bg-signal-amber text-white">
+          <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-[#A15C07] text-white">
             REVIEW
           </span>
         );
@@ -77,14 +77,14 @@ export const FindingsTable: React.FC<FindingsTableProps> = ({
 
   if (findings.length === 0) {
     return (
-      <div className="bg-surface-100 p-8 rounded border border-hairline text-center shadow-subtle">
-        <div className="inline-flex p-2.5 bg-signal-green-subtle text-signal-green rounded-xs mb-2.5">
-          <ShieldCheck size={24} />
+      <div className="bg-white p-8 rounded-md border border-[#DFE5E1] text-center shadow-xs">
+        <div className="inline-flex p-3 bg-emerald-50 text-[#16794B] rounded mb-3">
+          <ShieldCheck size={26} />
         </div>
-        <h3 className="font-mono text-xs font-bold text-ink uppercase tracking-wider">
+        <h3 className="font-mono text-xs font-bold text-[#17211F] uppercase tracking-wider">
           No Policy Violations Detected
         </h3>
-        <p className="text-xs text-ink-muted max-w-sm mx-auto mt-1">
+        <p className="text-xs text-[#64716C] max-w-sm mx-auto mt-1">
           Candidate configuration does not construct any data flows violating active data boundary policies.
         </p>
       </div>
@@ -92,35 +92,35 @@ export const FindingsTable: React.FC<FindingsTableProps> = ({
   }
 
   return (
-    <div className="bg-surface-100 rounded border border-hairline shadow-subtle overflow-hidden">
+    <div className="bg-white rounded-md border border-[#DFE5E1] shadow-xs overflow-hidden">
       {/* Table Header */}
-      <div className="px-4 py-3 border-b border-hairline flex items-center justify-between bg-surface-50">
+      <div className="px-5 py-3.5 border-b border-[#DFE5E1] flex items-center justify-between bg-[#FBFBFA]">
         <div>
-          <h3 className="font-mono font-bold text-xs text-ink uppercase tracking-wider">
+          <h3 className="font-mono font-bold text-xs text-[#17211F] uppercase tracking-wider">
             Reachable Policy Violations
           </h3>
-          <p className="text-xs text-ink-muted mt-0.5">
+          <p className="text-xs text-[#64716C] mt-0.5">
             Cypher-enumerated multi-hop source-to-sink paths composed across agent toolchains
           </p>
         </div>
-        <span className="text-[11px] font-mono px-2 py-0.5 bg-surface-200 rounded-xs text-ink-secondary border border-hairline">
+        <span className="text-xs font-mono px-2.5 py-0.5 bg-[#F5F6F4] rounded text-[#64716C] border border-[#DFE5E1]">
           {findings.length} findings
         </span>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
-          <thead className="bg-surface-50/60 border-b border-hairline text-ink-muted font-mono uppercase text-[10px] tracking-wider">
+          <thead className="bg-[#FBFBFA] border-b border-[#DFE5E1] text-[#64716C] font-mono uppercase text-[11px] tracking-wider">
             <tr>
-              <th className="px-4 py-2.5">Status / Severity</th>
-              <th className="px-4 py-2.5">Policy & ID</th>
-              <th className="px-4 py-2.5">Sensitive Source</th>
-              <th className="px-4 py-2.5">Agent Pipeline</th>
-              <th className="px-4 py-2.5">Egress Sink</th>
-              <th className="px-4 py-2.5 text-right">Actions</th>
+              <th className="px-5 py-2.5">Status / Severity</th>
+              <th className="px-5 py-2.5">Policy & ID</th>
+              <th className="px-5 py-2.5">Sensitive Source</th>
+              <th className="px-5 py-2.5">Agent Pipeline</th>
+              <th className="px-5 py-2.5">Egress Sink</th>
+              <th className="px-5 py-2.5 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-hairline">
+          <tbody className="divide-y divide-[#DFE5E1]">
             {findings.map((f) => {
               const isSelected = f.id === selectedFindingId;
               return (
@@ -128,62 +128,62 @@ export const FindingsTable: React.FC<FindingsTableProps> = ({
                   key={f.id}
                   onClick={() => onSelectFinding(f)}
                   className={`cursor-pointer transition-colors ${
-                    isSelected ? 'bg-surface-200' : 'hover:bg-surface-200/50'
+                    isSelected ? 'bg-[#F5F6F4] border-l-4 border-l-[#286A61]' : 'hover:bg-[#F5F6F4]/60'
                   }`}
                 >
-                  <td className="px-4 py-3 whitespace-nowrap">
+                  <td className="px-5 py-3.5 whitespace-nowrap">
                     <div className="flex items-center gap-1.5">
                       {getStatusBadge(f.status)}
                       {getSeverityBadge(f.severity)}
                     </div>
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="font-medium text-ink">{f.policy_name}</div>
-                    <div className="text-[10px] font-mono text-ink-muted">{f.policy_id}</div>
+                  <td className="px-5 py-3.5">
+                    <div className="font-medium text-[#17211F]">{f.policy_name}</div>
+                    <div className="text-[11px] font-mono text-[#64716C]">{f.policy_id}</div>
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="font-mono font-medium text-ink text-xs">{f.source_id}</div>
-                    <span className="text-[10px] font-mono uppercase text-signal-red font-semibold">
+                  <td className="px-5 py-3.5">
+                    <div className="font-mono font-medium text-[#17211F] text-xs">{f.source_id}</div>
+                    <span className="text-[11px] font-mono uppercase text-[#B42318] font-semibold">
                       [{f.source_classification}]
                     </span>
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-1.5 font-mono text-[11px] text-ink-secondary">
-                      <span className="text-signal-blue bg-signal-blue-subtle px-1.5 py-0.2 rounded-xs border border-signal-blue/20">
+                  <td className="px-5 py-3.5">
+                    <div className="flex items-center gap-1.5 font-mono text-xs text-[#64716C]">
+                      <span className="text-[#286A61] bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
                         {f.read_tool}
                       </span>
-                      <ArrowRight size={10} className="text-ink-faint" />
-                      <span className="text-ink bg-surface-200 px-1.5 py-0.2 rounded-xs border border-hairline font-bold">
+                      <ArrowRight size={11} className="text-[#9BA7A1]" />
+                      <span className="text-[#17211F] bg-[#F5F6F4] px-2 py-0.5 rounded border border-[#DFE5E1] font-semibold">
                         {f.agent_id}
                       </span>
-                      <ArrowRight size={10} className="text-ink-faint" />
-                      <span className="text-signal-amber bg-signal-amber-subtle px-1.5 py-0.2 rounded-xs border border-signal-amber/20">
+                      <ArrowRight size={11} className="text-[#9BA7A1]" />
+                      <span className="text-[#A15C07] bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
                         {f.send_tool}
                       </span>
                     </div>
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="font-mono font-medium text-ink text-xs">{f.destination_id}</div>
-                    <span className="text-[10px] font-mono uppercase text-signal-red font-semibold">
+                  <td className="px-5 py-3.5">
+                    <div className="font-mono font-medium text-[#17211F] text-xs">{f.destination_id}</div>
+                    <span className="text-[11px] font-mono uppercase text-[#B42318] font-semibold">
                       [{f.destination_trust}]
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-right whitespace-nowrap">
-                    <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
+                  <td className="px-5 py-3.5 text-right whitespace-nowrap">
+                    <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => onSelectFinding(f)}
-                        className="px-2 py-1 text-xs font-mono text-ink-secondary hover:text-ink bg-surface-200 hover:bg-surface-300 border border-hairline rounded-xs transition-colors flex items-center gap-1"
+                        className="px-2.5 py-1 text-xs font-medium text-[#17211F] hover:text-[#286A61] bg-white hover:bg-[#F5F6F4] border border-[#DFE5E1] rounded transition-colors flex items-center gap-1 cursor-pointer"
                       >
-                        <Eye size={11} />
+                        <Eye size={12} />
                         <span>Witness</span>
                       </button>
 
                       {f.status === 'new' && (
                         <button
                           onClick={() => onSimulateFix(f)}
-                          className="px-2.5 py-1 text-xs font-mono font-medium text-white bg-linear hover:bg-linear-hover rounded-xs transition-colors flex items-center gap-1 shadow-subtle"
+                          className="px-3 py-1 text-xs font-medium text-white bg-[#286A61] hover:bg-[#1f544c] rounded transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
                         >
-                          <Wrench size={11} />
+                          <Wrench size={12} />
                           <span>Simulate Fix</span>
                         </button>
                       )}
